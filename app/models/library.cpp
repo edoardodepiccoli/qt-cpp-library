@@ -1,9 +1,10 @@
-#include "library.h"
-#include "../visitors/jsonvisitor.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+
+#include "library.h"
+#include "../visitors/jsonvisitor.h"
 
 Library::Library()
 {

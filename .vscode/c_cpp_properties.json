@@ -7,7 +7,8 @@
                 "/opt/homebrew/Cellar/qt/6.9.0",
                 "/opt/homebrew/Cellar/qt/6.9.0/include",
                 "/opt/homebrew/Cellar/qt/6.9.0/include/QtCore",
-                "/opt/homebrew/Cellar/qt/6.9.0/include/QtWidgets"
+                "/opt/homebrew/Cellar/qt/6.9.0/include/QtWidgets",
+                "/opt/homebrew/Cellar/qt/6.9.0/lib/QtGui.framework/Versions/A/Headers"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
