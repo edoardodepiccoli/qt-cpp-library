@@ -1,0 +1,11 @@
+[
+    {
+        "author": "me",
+        "comment": "cool",
+        "description": "test",
+        "review": 5,
+        "title": "test",
+        "type": "book",
+        "year": 22
+    }
+]
