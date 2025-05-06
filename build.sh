@@ -5,7 +5,7 @@ clear
 set -e
 
 # Create build and bin directories
-mkdir -p build bin
+mkdir -p build
 
 # Move into build dir and run qmake referencing the .pro in root
 cd build
