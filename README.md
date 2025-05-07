@@ -40,9 +40,12 @@ I love Ruby On Rails.
 
 ## TODO
 
-- change view button to delete button
-- make it work
-
 - create newitemview page
-    - create a formvisitor that returns different types of form based on the item type
-    - do not overcomplicate it or abstract it too much
+    - create an itemformvisitor that returns different types of form based on the item type
+        - take inspiration from the itemcardvisitor to handle state
+    - the form sends a signal that triggers a private slot that sends a signal up when it creates a new item
+    - the signal is intercepted by the newitemview class that triggers a private slot that propagates the signal
+    - the signal is intercepted by the mainwindow that simply creates the new item
+    - how can i differentiate between the various types?
+    - maybe create the object at the level of the form returned by the itemformwidget, then simply pass the pointer up to the parents?
+    - this could be a decent idea, i hope
