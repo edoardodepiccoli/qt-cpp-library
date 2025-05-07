@@ -26,9 +26,8 @@ public:
     void visit(Article &article) override;
 
 signals:
-    // TODO check if you need to add const to pointer
-    // TODO check if you then need to delete item and manage ownership
-    void createItemRequested(Item *item);
+    // The receiver (NewItemView) takes ownership of the item pointer, I think
+    void createItemRequest(Item *item);
 
 private slots:
     void onCreateButtonClicked();

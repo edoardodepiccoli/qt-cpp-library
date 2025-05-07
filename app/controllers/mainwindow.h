@@ -17,6 +17,7 @@ public:
 
 private slots:
     void handleDeleteItemRequest(const QUuid &itemId);
+    void handleCreateItemRequest(Item *item);
 
 private:
     QStackedWidget *stackedWidget;

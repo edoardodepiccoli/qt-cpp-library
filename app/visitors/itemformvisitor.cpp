@@ -198,7 +198,7 @@ void ItemFormVisitor::onCreateButtonClicked()
 
     if (item)
     {
-        qDebug() << "Creating item of type:";
+        qDebug() << "Creating item in ItemFormVisitor. Type:";
         switch (currentFormType)
         {
         case FormType::Book:
@@ -211,6 +211,7 @@ void ItemFormVisitor::onCreateButtonClicked()
             qDebug() << "Article";
             break;
         }
-        emit createItemRequested(item);
+
+        emit createItemRequest(item);
     }
 }

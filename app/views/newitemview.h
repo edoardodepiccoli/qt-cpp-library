@@ -2,7 +2,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QComboBox>
-
+#include "../models/item.h"
 class NewItemView : public QWidget
 {
     Q_OBJECT
@@ -11,6 +11,9 @@ public:
 
     void setUpForm(const QString &type);
 
+signals:
+    void createItemRequest(Item *item);
+
 private:
     QVBoxLayout *mainLayout;
     QComboBox *typeComboBox;
@@ -18,4 +21,5 @@ private:
 
 private slots:
     void onTypeChanged(const QString &type);
+    void onItemCreationRequest(Item *item);
 };

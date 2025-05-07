@@ -60,10 +60,18 @@ void MainWindow::setupViews()
 void MainWindow::connectSignals()
 {
     connect(indexView, &IndexView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
+    connect(newItemView, &NewItemView::createItemRequest, this, &MainWindow::handleCreateItemRequest);
 }
 
 void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
 {
     libraryModel->removeItem(itemId);
     indexView->populateFromLibrary(libraryModel.get());
+}
+
+void MainWindow::handleCreateItemRequest(Item *item)
+{
+    libraryModel->addItem(std::unique_ptr<Item>(item));
+    indexView->populateFromLibrary(libraryModel.get());
+    stackedWidget->setCurrentWidget(indexView);
 }

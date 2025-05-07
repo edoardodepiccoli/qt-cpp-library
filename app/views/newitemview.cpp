@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QScrollArea>
+#include <QDebug>
+
 NewItemView::NewItemView(QWidget *parent)
     : QWidget(parent)
 {
@@ -14,7 +16,6 @@ NewItemView::NewItemView(QWidget *parent)
     QWidget *contentWidget = new QWidget;
     mainLayout = new QVBoxLayout(contentWidget);
 
-    // Add type selection combo box
     typeComboBox = new QComboBox(this);
     typeComboBox->addItem("book", "book");
     typeComboBox->addItem("movie", "movie");
@@ -70,10 +71,22 @@ void NewItemView::setUpForm(const QString &type)
     QWidget *form = visitor->getResult();
     mainLayout->addWidget(form);
     currentForm = form;
+
+    connect(visitor, &ItemFormVisitor::createItemRequest,
+            this, &NewItemView::onItemCreationRequest);
 }
 
 void NewItemView::onTypeChanged(const QString &type)
 {
     qDebug() << "Selected item type:" << type;
     setUpForm(type);
+}
+
+void NewItemView::onItemCreationRequest(Item *item)
+{
+    qDebug() << "Item creation bubbled up to NewItemView";
+    emit createItemRequest(item);
+
+    qDebug() << "Setting up form again";
+    setUpForm("book");
 }
