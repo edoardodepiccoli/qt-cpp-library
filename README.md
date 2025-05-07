@@ -28,24 +28,26 @@ Same as above, see folder names. Pretty easy to figure out everything.
 This navitation flow is heavily inspired (aka copied) by the RESTful routing pattern adopted by Ruby On Rails.
 I love Ruby On Rails.
 
-| Action            | REST Route           | View Transition                 |
-|-------------------|----------------------|---------------------------------|
-| List all items    | GET /items           | → IndexView                     |
-| Show item         | GET /items/:id       | IndexView → ShowItemView        |
-| New item form     | GET /items/new       | IndexView → NewItemView         |
-| Edit item form    | GET /items/:id/edit  | ShowItemView → EditItemView     |
-| Create item       | POST /items          | NewItemView → IndexView         |
-| Update item       | PUT /items/:id       | EditItemView → ShowItemView     |
-| Delete item       | DELETE /items/:id    | ShowItemView → IndexView        |
+| Action         | REST Route          | View Transition             |
+| -------------- | ------------------- | --------------------------- |
+| List all items | GET /items          | → IndexView                 |
+| Show item      | GET /items/:id      | IndexView → ShowItemView    |
+| New item form  | GET /items/new      | IndexView → NewItemView     |
+| Edit item form | GET /items/:id/edit | ShowItemView → EditItemView |
+| Create item    | POST /items         | NewItemView → IndexView     |
+| Update item    | PUT /items/:id      | EditItemView → ShowItemView |
+| Delete item    | DELETE /items/:id   | ShowItemView → IndexView    |
 
 ## TODO
 
-- create newitemview page
-    - create an itemformvisitor that returns different types of form based on the item type
-        - take inspiration from the itemcardvisitor to handle state
-    - the form sends a signal that triggers a private slot that sends a signal up when it creates a new item
-    - the signal is intercepted by the newitemview class that triggers a private slot that propagates the signal
-    - the signal is intercepted by the mainwindow that simply creates the new item
-    - how can i differentiate between the various types?
-    - maybe create the object at the level of the form returned by the itemformwidget, then simply pass the pointer up to the parents?
-    - this could be a decent idea, i hope
+- [x] Create `NewItemView` page  
+  - [x] Create an `ItemFormVisitor` that returns different types of form based on the item type  
+    - [x] Take inspiration from the `ItemCardVisitor` to handle state  
+  - [x] The form sends a signal that triggers a private slot that sends a signal up when it creates a new item  
+  - [x] The signal is intercepted by the `NewItemView` class that triggers a private slot that propagates the signal  
+  - [x] The signal is intercepted by the `MainWindow` that simply creates the new item
+```
+How can I differentiate between the various types?  
+Maybe create the object at the level of the form returned by the `ItemFormWidget`, then simply pass the pointer up to the parents?  
+This could be a decent idea, I hope (it was, I hope, again)
+```
