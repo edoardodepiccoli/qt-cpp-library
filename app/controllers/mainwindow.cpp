@@ -39,14 +39,16 @@ MainWindow::MainWindow(QWidget *parent)
             { stackedWidget->setCurrentWidget(newItemView); });
 
     stackedWidget->setCurrentWidget(indexView);
+    indexView->populateFromLibrary(libraryModel.get());
 }
 
 void MainWindow::setupViews()
 {
-    indexView->setStyleSheet("background-color: gray;");
-    newItemView->setStyleSheet("background-color: black;");
-    editItemView->setStyleSheet("background-color: darkred;");
-    showItemView->setStyleSheet("background-color: darkblue;");
+    // Set different styles to test view change
+    // indexView->setStyleSheet("background-color: gray;");
+    // newItemView->setStyleSheet("background-color: black;");
+    // editItemView->setStyleSheet("background-color: darkred;");
+    // showItemView->setStyleSheet("background-color: darkblue;");
 
     // Force them to expand and fill the stacked widget
     indexView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

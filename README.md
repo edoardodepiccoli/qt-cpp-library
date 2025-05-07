@@ -37,3 +37,8 @@ I love Ruby On Rails.
 | Create item       | POST /items          | NewItemView → IndexView         |
 | Update item       | PUT /items/:id       | EditItemView → ShowItemView     |
 | Delete item       | DELETE /items/:id    | ShowItemView → IndexView        |
+
+## TODO
+
+- display all items on indexview
+    - create visitor for each item displaying all the various properties
