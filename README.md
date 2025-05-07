@@ -40,5 +40,9 @@ I love Ruby On Rails.
 
 ## TODO
 
-- display all items on indexview
-    - create visitor for each item displaying all the various properties
+- change view button to delete button
+- make it work
+
+- create newitemview page
+    - create a formvisitor that returns different types of form based on the item type
+    - do not overcomplicate it or abstract it too much
