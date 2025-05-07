@@ -100,6 +100,7 @@ bool Library::loadFromFile()
         {
             item = std::make_unique<Article>();
             static_cast<Article *>(item.get())->setLink(obj["link"].toString());
+            static_cast<Article *>(item.get())->setAuthor(obj["author"].toString());
         }
 
         if (item)

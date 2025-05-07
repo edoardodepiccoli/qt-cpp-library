@@ -7,5 +7,52 @@
         "title": "test",
         "type": "book",
         "year": 22
+    },
+    {
+        "comment": "cool movie about space",
+        "description": "movie about space",
+        "director": "chris nolan",
+        "review": 5,
+        "title": "interstellar",
+        "type": "movie",
+        "year": 2015
+    },
+    {
+        "comment": "still have to read this article tbh",
+        "description": "The vast majority of web applications should start life as a Majestic Monolith: A single codebase that does everything the application needs to do. ",
+        "link": "https://signalvnoise.com/svn3/the-majestic-monolith-can-become-the-citadel/",
+        "author": "DHH",
+        "review": 4,
+        "title": "The Majestic Monolith can become The Citadel",
+        "type": "article",
+        "year": 2020
+    },
+    {
+        "comment": "really cool movie",
+        "description": "cool movie about robots that become cars and do cool shit",
+        "director": "idk",
+        "review": 5,
+        "title": "transformers",
+        "type": "movie",
+        "year": 2017
+    },
+    {
+        "author": "donald miller",
+        "comment": "i really like this book and it made me question wtf i am doing with my life",
+        "description": "book about how to live a better story",
+        "review": 5,
+        "title": "a million miles in a thousand years",
+        "type": "book",
+        "year": 2018
+    },
+    {
+        "comment": "i agree",
+        "description": "this article talks about building web apps using only a vanilla rails stack",
+        "link": "https://dev.37signals.com/a-vanilla-rails-stack-is-plenty/",
+        "author": "DHH",
+        "review": 5,
+        "title": "A Vanilla Rails Stack Is Plenty",
+        "type": "article",
+        "year": 2020
     }
 ]

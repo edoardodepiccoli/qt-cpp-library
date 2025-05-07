@@ -1,6 +1,7 @@
 #include "jsonvisitor.h"
 
-void JSONVisitor::visit(Book& book) {
+void JSONVisitor::visit(Book &book)
+{
     QJsonObject obj;
     obj["type"] = "book";
     obj["title"] = book.getTitle();
@@ -12,7 +13,8 @@ void JSONVisitor::visit(Book& book) {
     result = obj;
 }
 
-void JSONVisitor::visit(Movie& movie) {
+void JSONVisitor::visit(Movie &movie)
+{
     QJsonObject obj;
     obj["type"] = "movie";
     obj["title"] = movie.getTitle();
@@ -24,7 +26,8 @@ void JSONVisitor::visit(Movie& movie) {
     result = obj;
 }
 
-void JSONVisitor::visit(Article& article) {
+void JSONVisitor::visit(Article &article)
+{
     QJsonObject obj;
     obj["type"] = "article";
     obj["title"] = article.getTitle();
@@ -33,5 +36,6 @@ void JSONVisitor::visit(Article& article) {
     obj["review"] = article.getReview();
     obj["comment"] = article.getComment();
     obj["link"] = article.getLink();
+    obj["author"] = article.getAuthor();
     result = obj;
-} 
+}
