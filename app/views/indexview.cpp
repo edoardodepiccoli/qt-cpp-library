@@ -45,6 +45,7 @@ void IndexView::populateFromLibrary(Library *library)
         if (item)
         {
             // Pass this (IndexView) as the parent to the visitor
+            // This helps with Qt automatic memory management (really cool and useful stuff)
             ItemCardVisitor *visitor = new ItemCardVisitor(this);
             item->accept(*visitor);
             if (QWidget *w = visitor->getResult())

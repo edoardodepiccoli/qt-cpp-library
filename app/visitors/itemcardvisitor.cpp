@@ -40,7 +40,6 @@ void ItemCardVisitor::visit(Book &book)
 
 void ItemCardVisitor::onViewButtonClicked()
 {
-    qDebug() << "ItemCardVisitor::onViewButtonClicked() called for item ID:" << itemId;
     emit viewItemRequested(itemId);
 }
 
@@ -101,9 +100,7 @@ void ItemCardVisitor::visit(Article &article)
     widget = card;
 }
 
-// Implementation of the slot that then sends up the signal to the IndexView
 void ItemCardVisitor::onDeleteButtonClicked()
 {
-    qDebug() << "ItemCardVisitor::onDeleteButtonClicked() called for item ID:" << itemId;
     emit deleteItemRequested(itemId);
 }

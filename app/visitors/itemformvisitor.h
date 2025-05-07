@@ -21,12 +21,12 @@ public:
 
     QWidget *getResult() const { return form; }
 
+    // Keep the parameters to allow future "edit item" functionality
     void visit(Book &book) override;
     void visit(Movie &movie) override;
     void visit(Article &article) override;
 
 signals:
-    // The receiver (NewItemView) takes ownership of the item pointer, I think
     void createItemRequest(Item *item);
 
 private slots:

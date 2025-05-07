@@ -25,16 +25,16 @@ public:
     void visit(Article &article) override;
 
 signals:
-    void deleteItemRequested(const QUuid &itemId); // Signal to IndexView
-    void viewItemRequested(const QUuid &itemId);   // Signal to IndexView
+    void deleteItemRequested(const QUuid &itemId);
+    void viewItemRequested(const QUuid &itemId);
 
 private slots:
-    void onDeleteButtonClicked(); // New slot to handle button click
-    void onViewButtonClicked();   // New slot to handle button click
+    void onDeleteButtonClicked();
+    void onViewButtonClicked();
 
 private:
     QWidget *widget = nullptr;
-    QUuid itemId; // Store the ID of the item this visitor is for
+    QUuid itemId;
 };
 
 #endif // ITEMCARDVISITOR_H

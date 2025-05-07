@@ -1,6 +1,6 @@
 #pragma once
 #include <QWidget>
-#include <QUuid> // Include QUuid
+#include <QUuid>
 
 class QVBoxLayout;
 class Library;
