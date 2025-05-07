@@ -3,6 +3,13 @@
 #include <QLabel>
 #include <QFrame>
 #include <QPushButton>
+#include <QUuid>
+#include <QDebug>
+
+WidgetVisitor::WidgetVisitor(QObject *parent)
+    : QObject(parent), widget(nullptr)
+{
+}
 
 void WidgetVisitor::visit(Book &book)
 {
@@ -14,7 +21,12 @@ void WidgetVisitor::visit(Book &book)
     layout->addWidget(new QLabel("Author: " + book.getAuthor()));
     layout->addWidget(new QLabel("Year: " + QString::number(book.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(book.getReview())));
-    layout->addWidget(new QPushButton("View Book"));
+
+    QPushButton *deleteButton = new QPushButton("Delete Book");
+    layout->addWidget(deleteButton);
+
+    itemId = book.getId();
+    connect(deleteButton, &QPushButton::clicked, this, &WidgetVisitor::onDeleteButtonClicked);
 
     widget = card;
 }
@@ -29,7 +41,12 @@ void WidgetVisitor::visit(Movie &movie)
     layout->addWidget(new QLabel("Director: " + movie.getDirector()));
     layout->addWidget(new QLabel("Year: " + QString::number(movie.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(movie.getReview())));
-    layout->addWidget(new QPushButton("View Movie"));
+
+    QPushButton *deleteButton = new QPushButton("Delete Movie");
+    layout->addWidget(deleteButton);
+
+    itemId = movie.getId();
+    connect(deleteButton, &QPushButton::clicked, this, &WidgetVisitor::onDeleteButtonClicked);
 
     widget = card;
 }
@@ -45,7 +62,19 @@ void WidgetVisitor::visit(Article &article)
     layout->addWidget(new QLabel("Author: " + article.getAuthor()));
     layout->addWidget(new QLabel("Year: " + QString::number(article.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(article.getReview())));
-    layout->addWidget(new QPushButton("View Article"));
+
+    QPushButton *deleteButton = new QPushButton("Delete Article");
+    layout->addWidget(deleteButton);
+
+    itemId = article.getId();
+    connect(deleteButton, &QPushButton::clicked, this, &WidgetVisitor::onDeleteButtonClicked);
 
     widget = card;
+}
+
+// Implementation of the slot that then sends up the signal to the IndexView
+void WidgetVisitor::onDeleteButtonClicked()
+{
+    qDebug() << "WidgetVisitor::onDeleteButtonClicked() called for item ID:" << itemId;
+    emit deleteItemRequested(itemId);
 }

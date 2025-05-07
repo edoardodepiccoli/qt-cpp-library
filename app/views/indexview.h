@@ -1,5 +1,6 @@
 #pragma once
 #include <QWidget>
+#include <QUuid> // Include QUuid
 
 class QVBoxLayout;
 class Library;
@@ -7,10 +8,15 @@ class Library;
 class IndexView : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit IndexView(QWidget *parent = nullptr);
     void populateFromLibrary(Library *library);
 
+signals:
+    void deleteItemRequested(const QUuid &itemId);
+
 private:
     QVBoxLayout *mainLayout;
+    Library *libraryModel;
 };

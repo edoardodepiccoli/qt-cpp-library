@@ -4,24 +4,23 @@
 
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QUuid>
+#include <QDebug>
 
 IndexView::IndexView(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), libraryModel(nullptr)
 {
-    // Scroll area to wrap content
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
 
-    // Content widget that will hold all item widgets
     QWidget *contentWidget = new QWidget;
     mainLayout = new QVBoxLayout(contentWidget);
-    mainLayout->setAlignment(Qt::AlignTop); // Stack items vertically
+    mainLayout->setAlignment(Qt::AlignTop);
     mainLayout->setSpacing(12);
 
     contentWidget->setLayout(mainLayout);
     scrollArea->setWidget(contentWidget);
 
-    // Final layout of IndexView
     QVBoxLayout *outerLayout = new QVBoxLayout(this);
     outerLayout->addWidget(scrollArea);
     setLayout(outerLayout);
@@ -29,6 +28,8 @@ IndexView::IndexView(QWidget *parent)
 
 void IndexView::populateFromLibrary(Library *library)
 {
+    libraryModel = library;
+
     // Clear existing cards
     QLayoutItem *item;
     while ((item = mainLayout->takeAt(0)) != nullptr)
@@ -38,15 +39,26 @@ void IndexView::populateFromLibrary(Library *library)
     }
 
     // Generate a card for each item
-    for (int i = 0; i < library->getItemCount(); ++i)
+    for (int i = 0; i < libraryModel->getItemCount(); ++i)
     {
-        Item *item = library->getItem(i);
-        WidgetVisitor visitor;
-        item->accept(visitor);
-        if (QWidget *w = visitor.getResult())
+        Item *item = libraryModel->getItem(i);
+        if (item)
         {
-            w->setStyleSheet("background-color: gray;");
-            mainLayout->addWidget(w);
+            // Pass this (IndexView) as the parent to the visitor
+            WidgetVisitor *visitor = new WidgetVisitor(this);
+            item->accept(*visitor);
+            if (QWidget *w = visitor->getResult())
+            {
+                w->setStyleSheet("background-color: gray;");
+                mainLayout->addWidget(w);
+
+                connect(visitor, &WidgetVisitor::deleteItemRequested, this, &IndexView::deleteItemRequested);
+            }
+            else
+            {
+                // If the visitor didn't create a widget, delete the visitor
+                delete visitor;
+            }
         }
     }
 }

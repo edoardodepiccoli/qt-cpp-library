@@ -49,6 +49,8 @@
         "vector": "cpp",
         "qlineedit": "cpp",
         "qwidget": "cpp",
-        "qvboxlayout": "cpp"
+        "qvboxlayout": "cpp",
+        "qstring": "cpp",
+        "memory": "cpp"
     }
 }

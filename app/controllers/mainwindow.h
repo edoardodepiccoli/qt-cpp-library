@@ -1,5 +1,6 @@
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QUuid>
 
 #include "../models/library.h"
 
@@ -14,16 +15,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
 
-private:
-    QStackedWidget *stackedWidget; // Switches between views
+private slots:
+    void handleDeleteItemRequest(const QUuid &itemId);
 
-    // Main views
+private:
+    QStackedWidget *stackedWidget;
+
     IndexView *indexView;
     ShowItemView *showItemView;
     NewItemView *newItemView;
     EditItemView *editItemView;
 
-    std::unique_ptr<Library> libraryModel; // Owns the data
+    std::unique_ptr<Library> libraryModel;
 
     void setupViews();
     void connectSignals();

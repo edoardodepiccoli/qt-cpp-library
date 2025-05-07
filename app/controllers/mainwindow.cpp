@@ -7,6 +7,7 @@
 #include <QToolBar>
 #include <QAction>
 #include <QVBoxLayout>
+#include <QUuid>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(800, 600);
 
     setupViews();
+    connectSignals();
 
     QWidget *central = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(central);
@@ -44,19 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupViews()
 {
-    // Set different styles to test view change
-    // indexView->setStyleSheet("background-color: gray;");
-    // newItemView->setStyleSheet("background-color: black;");
-    // editItemView->setStyleSheet("background-color: darkred;");
-    // showItemView->setStyleSheet("background-color: darkblue;");
-
-    // Force them to expand and fill the stacked widget
     indexView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     newItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     editItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     showItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // Put them into the QStackedWidget
     stackedWidget->addWidget(indexView);
     stackedWidget->addWidget(newItemView);
     stackedWidget->addWidget(editItemView);
@@ -65,4 +59,11 @@ void MainWindow::setupViews()
 
 void MainWindow::connectSignals()
 {
+    connect(indexView, &IndexView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
+}
+
+void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
+{
+    libraryModel->removeItem(itemId);
+    indexView->populateFromLibrary(libraryModel.get());
 }
