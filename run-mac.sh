@@ -1,0 +1,1 @@
+./build/bin/qt-library.app/Contents/MacOS/qt-library
