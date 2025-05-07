@@ -15,6 +15,7 @@ public:
 
 signals:
     void deleteItemRequested(const QUuid &itemId);
+    void viewItemRequested(const QUuid &itemId);
 
 private:
     QVBoxLayout *mainLayout;

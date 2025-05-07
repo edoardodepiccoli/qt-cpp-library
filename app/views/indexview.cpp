@@ -1,6 +1,6 @@
 #include "indexview.h"
 #include "../models/library.h"
-#include "../visitors/widgetvisitor.h"
+#include "../visitors/itemcardvisitor.h"
 
 #include <QVBoxLayout>
 #include <QScrollArea>
@@ -45,14 +45,15 @@ void IndexView::populateFromLibrary(Library *library)
         if (item)
         {
             // Pass this (IndexView) as the parent to the visitor
-            WidgetVisitor *visitor = new WidgetVisitor(this);
+            ItemCardVisitor *visitor = new ItemCardVisitor(this);
             item->accept(*visitor);
             if (QWidget *w = visitor->getResult())
             {
                 w->setStyleSheet("background-color: gray;");
                 mainLayout->addWidget(w);
 
-                connect(visitor, &WidgetVisitor::deleteItemRequested, this, &IndexView::deleteItemRequested);
+                connect(visitor, &ItemCardVisitor::deleteItemRequested, this, &IndexView::deleteItemRequested);
+                connect(visitor, &ItemCardVisitor::viewItemRequested, this, &IndexView::viewItemRequested);
             }
             else
             {
