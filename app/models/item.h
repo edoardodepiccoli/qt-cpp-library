@@ -1,6 +1,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+#include <QUuid>
 #include <QString>
 
 class Visitor; // Forward declaration
@@ -11,6 +12,9 @@ public:
     Item(const QString &title = "", const QString &description = "",
          int year = 0, int review = 3, const QString &comment = "");
     virtual ~Item() = default;
+
+    QUuid getId() const { return id; }
+    void setId(const QUuid &newId) { id = newId; }
 
     QString getTitle() const { return title; }
     QString getDescription() const { return description; }
@@ -33,6 +37,7 @@ public:
     virtual void accept(Visitor &visitor) = 0;
 
 protected:
+    QUuid id; // Add unique identifier because without that it would be a mess
     QString title;
     QString description;
     int year;

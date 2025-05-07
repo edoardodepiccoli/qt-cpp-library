@@ -6,11 +6,12 @@
 #include "../models/movie.h"
 #include "../models/article.h"
 
-class DebugVisitor : public Visitor {
+class DebugVisitor : public Visitor
+{
 public:
-    void visit(Book& book) override;
-    void visit(Movie& movie) override;
-    void visit(Article& article) override;
+    void visit(Book &book) override;
+    void visit(Movie &movie) override;
+    void visit(Article &article) override;
 };
 
-#endif // DEBUGVISITOR_H 
+#endif // DEBUGVISITOR_H

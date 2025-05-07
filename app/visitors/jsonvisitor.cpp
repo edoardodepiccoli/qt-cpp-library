@@ -4,6 +4,7 @@ void JSONVisitor::visit(Book &book)
 {
     QJsonObject obj;
     obj["type"] = "book";
+    obj["id"] = book.getId().toString();
     obj["title"] = book.getTitle();
     obj["description"] = book.getDescription();
     obj["year"] = book.getYear();
@@ -17,6 +18,7 @@ void JSONVisitor::visit(Movie &movie)
 {
     QJsonObject obj;
     obj["type"] = "movie";
+    obj["id"] = movie.getId().toString();
     obj["title"] = movie.getTitle();
     obj["description"] = movie.getDescription();
     obj["year"] = movie.getYear();
@@ -30,6 +32,7 @@ void JSONVisitor::visit(Article &article)
 {
     QJsonObject obj;
     obj["type"] = "article";
+    obj["id"] = article.getId().toString();
     obj["title"] = article.getTitle();
     obj["description"] = article.getDescription();
     obj["year"] = article.getYear();

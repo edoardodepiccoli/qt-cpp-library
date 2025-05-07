@@ -1,58 +1,64 @@
 [
     {
-        "author": "me",
-        "comment": "cool",
-        "description": "test",
-        "review": 5,
-        "title": "test",
-        "type": "book",
-        "year": 22
-    },
-    {
         "comment": "cool movie about space",
         "description": "movie about space",
         "director": "chris nolan",
+        "id": "{91fd2c35-2e09-45c7-8852-6c43cbad9c3e}",
         "review": 5,
         "title": "interstellar",
         "type": "movie",
         "year": 2015
     },
     {
+        "author": "DHH",
         "comment": "still have to read this article tbh",
         "description": "The vast majority of web applications should start life as a Majestic Monolith: A single codebase that does everything the application needs to do. ",
+        "id": "{670e5fc2-cda2-4403-80a7-f6f305bb9d37}",
         "link": "https://signalvnoise.com/svn3/the-majestic-monolith-can-become-the-citadel/",
-        "author": "DHH",
         "review": 4,
         "title": "The Majestic Monolith can become The Citadel",
         "type": "article",
         "year": 2020
     },
     {
-        "comment": "really cool movie",
-        "description": "cool movie about robots that become cars and do cool shit",
-        "director": "idk",
-        "review": 5,
-        "title": "transformers",
-        "type": "movie",
-        "year": 2017
-    },
-    {
         "author": "donald miller",
         "comment": "i really like this book and it made me question wtf i am doing with my life",
         "description": "book about how to live a better story",
+        "id": "{7d976508-2f58-429e-b9b9-75893d340ab7}",
         "review": 5,
         "title": "a million miles in a thousand years",
         "type": "book",
         "year": 2018
     },
     {
+        "author": "DHH",
         "comment": "i agree",
         "description": "this article talks about building web apps using only a vanilla rails stack",
+        "id": "{cab16060-4e36-4766-acc6-b8bc8249f251}",
         "link": "https://dev.37signals.com/a-vanilla-rails-stack-is-plenty/",
-        "author": "DHH",
         "review": 5,
         "title": "A Vanilla Rails Stack Is Plenty",
         "type": "article",
         "year": 2020
+    },
+    {
+        "author": "me",
+        "comment": "blabla",
+        "description": "test description",
+        "id": "{3b1c8b04-5267-4ae8-a157-1c20f778fe6a}",
+        "review": 3,
+        "title": "test book",
+        "type": "book",
+        "year": 2014
+    },
+    {
+        "comment": "bella",
+        "description": "who tf doesnt know harry potter",
+        "director": "bo",
+        "id": "{083dfe6b-7834-435b-a8e5-5a2267cea06c}",
+        "review": 4,
+        "title": "harry potter",
+        "type": "movie",
+        "year": 2008
     }
 ]
