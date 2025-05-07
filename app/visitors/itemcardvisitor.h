@@ -16,6 +16,7 @@ class ItemCardVisitor : public QObject, public Visitor
 
 public:
     explicit ItemCardVisitor(QObject *parent = nullptr);
+
     QWidget *getResult() const { return widget; }
     QUuid getItemId() const { return itemId; }
 
