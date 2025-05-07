@@ -60,5 +60,15 @@
         "title": "harry potter",
         "type": "movie",
         "year": 2008
+    },
+    {
+        "comment": "bel film marvel",
+        "description": "film sul wakanda e black panther",
+        "director": "idk",
+        "id": "{07daefcc-2e3b-4005-bdd1-5025131ff384}",
+        "review": 4,
+        "title": "black panther",
+        "type": "movie",
+        "year": 2019
     }
 ]
