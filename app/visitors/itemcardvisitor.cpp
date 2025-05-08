@@ -11,8 +11,24 @@ ItemCardVisitor::ItemCardVisitor(QObject *parent)
 {
 }
 
+ItemCardVisitor::~ItemCardVisitor()
+{
+    clearWidget();
+}
+
+void ItemCardVisitor::clearWidget()
+{
+    if (widget)
+    {
+        delete widget;
+        widget = nullptr;
+    }
+}
+
 void ItemCardVisitor::visit(Book &book)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *card = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(card);
 
@@ -27,9 +43,6 @@ void ItemCardVisitor::visit(Book &book)
     QPushButton *viewButton = new QPushButton("View Book");
     horizontalLayout->addWidget(viewButton);
 
-    // QPushButton *deleteButton = new QPushButton("Delete Book");
-    // horizontalLayout->addWidget(deleteButton);
-
     layout->addLayout(horizontalLayout);
 
     itemId = book.getId();
@@ -40,6 +53,8 @@ void ItemCardVisitor::visit(Book &book)
 
 void ItemCardVisitor::visit(Movie &movie)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *card = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(card);
 
@@ -54,9 +69,6 @@ void ItemCardVisitor::visit(Movie &movie)
     QPushButton *viewButton = new QPushButton("View Movie");
     horizontalLayout->addWidget(viewButton);
 
-    // QPushButton *deleteButton = new QPushButton("Delete Movie");
-    // horizontalLayout->addWidget(deleteButton);
-
     layout->addLayout(horizontalLayout);
 
     itemId = movie.getId();
@@ -68,6 +80,8 @@ void ItemCardVisitor::visit(Movie &movie)
 
 void ItemCardVisitor::visit(Article &article)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *card = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(card);
 
@@ -82,9 +96,6 @@ void ItemCardVisitor::visit(Article &article)
 
     QPushButton *viewButton = new QPushButton("View Article");
     horizontalLayout->addWidget(viewButton);
-
-    // QPushButton *deleteButton = new QPushButton("Delete Article");
-    // horizontalLayout->addWidget(deleteButton);
 
     layout->addLayout(horizontalLayout);
 

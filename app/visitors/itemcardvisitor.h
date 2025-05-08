@@ -16,7 +16,8 @@ class ItemCardVisitor : public QObject, public Visitor
 
 public:
     explicit ItemCardVisitor(QObject *parent = nullptr);
-    ~ItemCardVisitor() override = default;
+    ~ItemCardVisitor() override;
+
     QWidget *getResult() const { return widget; }
     QUuid getItemId() const { return itemId; }
 
@@ -28,6 +29,7 @@ signals:
     void itemShowRequested(const QUuid &itemId);
 
 private:
+    void clearWidget();
     QWidget *widget = nullptr;
     QUuid itemId;
 };
