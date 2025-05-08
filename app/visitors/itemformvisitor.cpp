@@ -201,13 +201,13 @@ void ItemFormVisitor::onCreateButtonClicked()
         switch (currentFormType)
         {
         case FormType::Book:
-            qDebug() << "ItemFormVisitor 🗣️ Sending up pointer to Book item 🔥🥵";
+            qDebug() << "Creating Book";
             break;
         case FormType::Movie:
-            qDebug() << "ItemFormVisitor 🗣️ Sending up pointer to Movie item 🔥🥵";
+            qDebug() << "Creating Movie";
             break;
         case FormType::Article:
-            qDebug() << "ItemFormVisitor 🗣️  Sending up pointer to Article item 🔥🥵";
+            qDebug() << "Creating Article";
             break;
         }
 
