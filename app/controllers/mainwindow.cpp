@@ -3,7 +3,7 @@
 #include "../views/newitemview.h"
 #include "../views/edititemview.h"
 #include "../views/showitemview.h"
-
+#include "../views/viewitemview.h"
 #include <QToolBar>
 #include <QAction>
 #include <QVBoxLayout>
@@ -35,9 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *indexAction = toolbar->addAction("Index");
     QAction *newItemAction = toolbar->addAction("New Item");
 
-    connect(indexAction, &QAction::triggered, this, [=]()
+    connect(indexAction, &QAction::triggered, this, [this]()
             { stackedWidget->setCurrentWidget(indexView); });
-    connect(newItemAction, &QAction::triggered, this, [=]()
+    connect(newItemAction, &QAction::triggered, this, [this]()
             { stackedWidget->setCurrentWidget(newItemView); });
 
     stackedWidget->setCurrentWidget(indexView);
@@ -59,8 +59,9 @@ void MainWindow::setupViews()
 
 void MainWindow::connectSignals()
 {
-    connect(indexView, &IndexView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
     connect(newItemView, &NewItemView::createItemRequest, this, &MainWindow::handleCreateItemRequest);
+    connect(indexView, &IndexView::viewItemRequested, this, &MainWindow::handleViewItemRequest);
+    // connect(indexView, &IndexView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
 }
 
 void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
@@ -74,4 +75,12 @@ void MainWindow::handleCreateItemRequest(Item *item)
     libraryModel->addItem(std::unique_ptr<Item>(item));
     indexView->populateFromLibrary(libraryModel.get());
     stackedWidget->setCurrentWidget(indexView);
+}
+
+void MainWindow::handleViewItemRequest(const QUuid &itemId)
+{
+    Item *item = libraryModel->getItem(itemId);
+    ViewItemView *viewItemView = new ViewItemView(this, item);
+    stackedWidget->addWidget(viewItemView);
+    stackedWidget->setCurrentWidget(viewItemView);
 }

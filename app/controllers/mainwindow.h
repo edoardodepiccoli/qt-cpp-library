@@ -16,8 +16,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
 private slots:
-    void handleDeleteItemRequest(const QUuid &itemId);
     void handleCreateItemRequest(Item *item);
+    void handleViewItemRequest(const QUuid &itemId);
+    void handleDeleteItemRequest(const QUuid &itemId);
 
 private:
     QStackedWidget *stackedWidget;

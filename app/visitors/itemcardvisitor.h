@@ -25,12 +25,8 @@ public:
     void visit(Article &article) override;
 
 signals:
-    void deleteItemRequested(const QUuid &itemId);
+    // void deleteItemRequested(const QUuid &itemId);
     void viewItemRequested(const QUuid &itemId);
-
-private slots:
-    void onDeleteButtonClicked();
-    void onViewButtonClicked();
 
 private:
     QWidget *widget = nullptr;

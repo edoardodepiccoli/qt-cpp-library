@@ -53,8 +53,8 @@ void IndexView::populateFromLibrary(Library *library)
                 w->setStyleSheet("background-color: gray;");
                 mainLayout->addWidget(w);
 
-                connect(visitor, &ItemCardVisitor::deleteItemRequested, this, &IndexView::deleteItemRequested);
-                connect(visitor, &ItemCardVisitor::viewItemRequested, this, &IndexView::viewItemRequested);
+                connect(visitor, &ItemCardVisitor::viewItemRequested,
+                        this, &IndexView::viewItemRequested);
             }
             else
             {

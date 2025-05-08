@@ -14,7 +14,7 @@ public:
     void populateFromLibrary(Library *library);
 
 signals:
-    void deleteItemRequested(const QUuid &itemId);
+    // Qt automatically forwards the parameters when the signatures match, cool stuff
     void viewItemRequested(const QUuid &itemId);
 
 private:
