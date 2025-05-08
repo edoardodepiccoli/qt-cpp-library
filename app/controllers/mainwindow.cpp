@@ -62,9 +62,6 @@ void MainWindow::connectSignals()
     connect(newItemView, &NewItemView::createItemRequested, this, &MainWindow::handleCreateItemRequest);
 
     connect(indexView, &IndexView::itemShowRequested, this, &MainWindow::handleShowItemRequest);
-
-    connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
-    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
 }
 
 void MainWindow::handleCreateItemRequest(Item *item)
@@ -76,23 +73,18 @@ void MainWindow::handleCreateItemRequest(Item *item)
 
 void MainWindow::handleShowItemRequest(const QUuid &itemId)
 {
-    qDebug() << "handleShowItemRequest" << itemId;
     Item *item = libraryModel->getItem(itemId);
-    if (item)
-    {
-        ShowItemView *showItemView = new ShowItemView(this, item);
-        stackedWidget->addWidget(showItemView);
-        stackedWidget->setCurrentWidget(showItemView);
-    }
-    else
-    {
-        qDebug() << "Item not found";
-    }
+    ShowItemView *showItemView = new ShowItemView(this, item);
+
+    connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
+    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
+
+    stackedWidget->addWidget(showItemView);
+    stackedWidget->setCurrentWidget(showItemView);
 }
 
 void MainWindow::handleEditItemRequest(const QUuid &itemId)
 {
-    qDebug() << "handleEditItemRequest" << itemId;
     Item *item = libraryModel->getItem(itemId);
     EditItemView *editItemView = new EditItemView(this, item);
     stackedWidget->addWidget(editItemView);
@@ -101,7 +93,7 @@ void MainWindow::handleEditItemRequest(const QUuid &itemId)
 
 void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
 {
-    qDebug() << "handleDeleteItemRequest" << itemId;
     libraryModel->removeItem(itemId);
     indexView->populateFromLibrary(libraryModel.get());
+    stackedWidget->setCurrentWidget(indexView);
 }
