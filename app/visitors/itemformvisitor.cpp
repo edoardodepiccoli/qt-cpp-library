@@ -6,12 +6,14 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QPushButton>
+#include <QDebug>
 
-ItemFormVisitor::ItemFormVisitor(QObject *parent)
+ItemFormVisitor::ItemFormVisitor(QObject *parent, Item *item)
     : QObject(parent), form(nullptr), titleEdit(nullptr), descriptionEdit(nullptr),
       yearEdit(nullptr), reviewEdit(nullptr), commentEdit(nullptr), authorEdit(nullptr),
-      directorEdit(nullptr), linkEdit(nullptr)
+      directorEdit(nullptr), linkEdit(nullptr), item(item)
 {
+    isEditing = item != nullptr;
 }
 
 void ItemFormVisitor::visit(Book &book)
@@ -49,10 +51,19 @@ void ItemFormVisitor::visit(Book &book)
     layout->addWidget(authorLabel);
     layout->addWidget(authorEdit);
 
-    QPushButton *createButton = new QPushButton("Create Book");
-    layout->addWidget(createButton);
-
-    connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    if (isEditing)
+    {
+        QPushButton *editButton = new QPushButton("Update Book");
+        layout->addWidget(editButton);
+        connect(editButton, &QPushButton::clicked, this, &ItemFormVisitor::onUpdateButtonClicked);
+        populateFormFields(&book);
+    }
+    else
+    {
+        QPushButton *createButton = new QPushButton("Create Book");
+        layout->addWidget(createButton);
+        connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    }
 
     this->form = form;
     currentFormType = FormType::Book;
@@ -93,10 +104,19 @@ void ItemFormVisitor::visit(Movie &movie)
     layout->addWidget(directorLabel);
     layout->addWidget(directorEdit);
 
-    QPushButton *createButton = new QPushButton("Create Movie");
-    layout->addWidget(createButton);
-
-    connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    if (isEditing)
+    {
+        QPushButton *editButton = new QPushButton("Update Movie");
+        layout->addWidget(editButton);
+        connect(editButton, &QPushButton::clicked, this, &ItemFormVisitor::onUpdateButtonClicked);
+        populateFormFields(&movie);
+    }
+    else
+    {
+        QPushButton *createButton = new QPushButton("Create Movie");
+        layout->addWidget(createButton);
+        connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    }
 
     this->form = form;
     currentFormType = FormType::Movie;
@@ -142,18 +162,53 @@ void ItemFormVisitor::visit(Article &article)
     layout->addWidget(authorLabel);
     layout->addWidget(authorEdit);
 
-    QPushButton *createButton = new QPushButton("Create Article");
-    layout->addWidget(createButton);
-
-    connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    if (isEditing)
+    {
+        QPushButton *editButton = new QPushButton("Update Article");
+        layout->addWidget(editButton);
+        connect(editButton, &QPushButton::clicked, this, &ItemFormVisitor::onUpdateButtonClicked);
+        populateFormFields(&article);
+    }
+    else
+    {
+        QPushButton *createButton = new QPushButton("Create Article");
+        layout->addWidget(createButton);
+        connect(createButton, &QPushButton::clicked, this, &ItemFormVisitor::onCreateButtonClicked);
+    }
 
     this->form = form;
     currentFormType = FormType::Article;
 }
 
-void ItemFormVisitor::onCreateButtonClicked()
+void ItemFormVisitor::populateFormFields(Item *item)
 {
-    Item *item = nullptr;
+    if (!item)
+        return;
+
+    titleEdit->setText(item->getTitle());
+    descriptionEdit->setText(item->getDescription());
+    yearEdit->setText(QString::number(item->getYear()));
+    reviewEdit->setText(QString::number(item->getReview()));
+    commentEdit->setText(item->getComment());
+
+    if (auto book = dynamic_cast<Book *>(item))
+    {
+        authorEdit->setText(book->getAuthor());
+    }
+    else if (auto movie = dynamic_cast<Movie *>(item))
+    {
+        directorEdit->setText(movie->getDirector());
+    }
+    else if (auto article = dynamic_cast<Article *>(item))
+    {
+        authorEdit->setText(article->getAuthor());
+        linkEdit->setText(article->getLink());
+    }
+}
+
+Item *ItemFormVisitor::createItemFromForm() const
+{
+    Item *newItem = nullptr;
 
     switch (currentFormType)
     {
@@ -166,7 +221,7 @@ void ItemFormVisitor::onCreateButtonClicked()
         book->setReview(reviewEdit->text().toInt());
         book->setComment(commentEdit->toPlainText());
         book->setAuthor(authorEdit->text());
-        item = book;
+        newItem = book;
         break;
     }
     case FormType::Movie:
@@ -178,7 +233,7 @@ void ItemFormVisitor::onCreateButtonClicked()
         movie->setReview(reviewEdit->text().toInt());
         movie->setComment(commentEdit->toPlainText());
         movie->setDirector(directorEdit->text());
-        item = movie;
+        newItem = movie;
         break;
     }
     case FormType::Article:
@@ -191,26 +246,27 @@ void ItemFormVisitor::onCreateButtonClicked()
         article->setComment(commentEdit->toPlainText());
         article->setLink(linkEdit->text());
         article->setAuthor(authorEdit->text());
-        item = article;
+        newItem = article;
         break;
     }
     }
 
-    if (item)
-    {
-        switch (currentFormType)
-        {
-        case FormType::Book:
-            qDebug() << "Creating Book";
-            break;
-        case FormType::Movie:
-            qDebug() << "Creating Movie";
-            break;
-        case FormType::Article:
-            qDebug() << "Creating Article";
-            break;
-        }
+    return newItem;
+}
 
-        emit createItemRequested(item);
+void ItemFormVisitor::onCreateButtonClicked()
+{
+    if (Item *newItem = createItemFromForm())
+    {
+        emit createItemRequested(newItem);
+    }
+}
+
+void ItemFormVisitor::onUpdateButtonClicked()
+{
+    if (Item *newItem = createItemFromForm())
+    {
+        newItem->setId(item->getId()); // Preserve the original ID
+        emit updateItemRequested(newItem);
     }
 }
