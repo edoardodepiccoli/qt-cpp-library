@@ -27,17 +27,26 @@ IndexView::IndexView(QWidget *parent)
     setLayout(outerLayout);
 }
 
+IndexView::~IndexView()
+{
+    // Clear all visitors
+    qDeleteAll(visitors);
+    visitors.clear();
+}
+
 void IndexView::populateFromLibrary(Library *library)
 {
     libraryModel = library;
 
-    // Clear existing cards
+    // Clear existing cards and visitors
     QLayoutItem *item;
     while ((item = mainLayout->takeAt(0)) != nullptr)
     {
         delete item->widget();
         delete item;
     }
+    qDeleteAll(visitors);
+    visitors.clear();
 
     // Generate a card for each item
     for (int i = 0; i < libraryModel->getItemCount(); ++i)
@@ -46,11 +55,12 @@ void IndexView::populateFromLibrary(Library *library)
         if (item)
         {
             // Pass this (IndexView) as the parent to the visitor
-            // This helps with Qt automatic memory management (really cool and useful stuff)
             ItemCardVisitor *visitor = new ItemCardVisitor(this);
+            visitors.append(visitor); // Track the visitor
             item->accept(*visitor);
             if (QWidget *w = visitor->getResult())
             {
+                w->setParent(this); // Explicitly set parent
                 w->setStyleSheet("background-color: gray;");
                 mainLayout->addWidget(w);
 
@@ -60,6 +70,7 @@ void IndexView::populateFromLibrary(Library *library)
             else
             {
                 // If the visitor didn't create a widget, delete the visitor
+                visitors.removeOne(visitor);
                 delete visitor;
             }
         }

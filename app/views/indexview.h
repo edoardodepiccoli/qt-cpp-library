@@ -1,9 +1,11 @@
 #pragma once
 #include <QWidget>
 #include <QUuid>
+#include <QList>
 
 class QVBoxLayout;
 class Library;
+class ItemCardVisitor;
 
 class IndexView : public QWidget
 {
@@ -11,7 +13,7 @@ class IndexView : public QWidget
 
 public:
     explicit IndexView(QWidget *parent = nullptr);
-    ~IndexView() override = default;
+    ~IndexView() override;
 
     void populateFromLibrary(Library *library);
 
@@ -22,4 +24,5 @@ signals:
 private:
     QVBoxLayout *mainLayout;
     Library *libraryModel;
+    QList<ItemCardVisitor *> visitors;
 };
