@@ -11,6 +11,9 @@ public:
     explicit EditItemView(QWidget *parent = nullptr, Item *item = nullptr);
     ~EditItemView() override = default;
 
+signals:
+    void updateItemRequested(Item *item);
+
 private:
     Item *item;
     QVBoxLayout *layout;
