@@ -12,88 +12,142 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       stackedWidget(new QStackedWidget),
-      indexView(new IndexView),
-      newItemView(new NewItemView),
-      editItemView(new EditItemView),
-      showItemView(new ShowItemView),
       libraryModel(std::make_unique<Library>())
 {
     resize(800, 600);
 
-    setupViews();
-    connectSignals();
-
+    // Set up central widget
     QWidget *central = new QWidget(this);
+    // Set up layout for the central widget
     QVBoxLayout *layout = new QVBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
+    // Add stacked widget to layout
     layout->addWidget(stackedWidget);
-    central->setLayout(layout);
 
-    setCentralWidget(central);
-
+    // Set up toolbar (Qt automatically places it at the top of the window)
     QToolBar *toolbar = addToolBar("Navigation");
     QAction *indexAction = toolbar->addAction("Index");
     QAction *newItemAction = toolbar->addAction("New Item");
 
-    connect(indexAction, &QAction::triggered, this, [this]()
-            { stackedWidget->setCurrentWidget(indexView); });
-    connect(newItemAction, &QAction::triggered, this, [this]()
-            { stackedWidget->setCurrentWidget(newItemView); });
+    connect(indexAction, &QAction::triggered, this, &MainWindow::setIndexView);
+    connect(newItemAction, &QAction::triggered, this, &MainWindow::setNewItemView);
 
-    stackedWidget->setCurrentWidget(indexView);
+    // Set the IndexView as the initial view
+    setIndexView();
+
+    // Set layout on central widget
+    central->setLayout(layout);
+    // Set central widget
+    setCentralWidget(central);
+}
+
+void MainWindow::clearCurrentView()
+{
+    // Get the current widget
+    QWidget *currentWidget = stackedWidget->currentWidget();
+    // Remove it from the stacked widget
+    stackedWidget->removeWidget(currentWidget);
+    // Delete it
+    delete currentWidget;
+}
+
+// Navigation slots
+void MainWindow::setIndexView()
+{
+    // Clear the current view
+    clearCurrentView();
+
+    // Initialize the IndexView
+    IndexView *indexView = new IndexView(this);
     indexView->populateFromLibrary(libraryModel.get());
-}
 
-void MainWindow::setupViews()
-{
-    indexView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    newItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    editItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    showItemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // Connect signals and slots
+    connect(indexView, &IndexView::itemShowRequested, this, &MainWindow::handleShowItemRequest);
 
+    // Place it in the stacked widget
     stackedWidget->addWidget(indexView);
-    stackedWidget->addWidget(newItemView);
-    stackedWidget->addWidget(editItemView);
-    stackedWidget->addWidget(showItemView);
+    // Set it as the current view
+    stackedWidget->setCurrentWidget(indexView);
 }
 
-void MainWindow::connectSignals()
+void MainWindow::setNewItemView()
 {
+    // Clear the current view
+    clearCurrentView();
+
+    // Initialize the NewItemView
+    NewItemView *newItemView = new NewItemView(this);
+
+    // Connect signals and slots
     connect(newItemView, &NewItemView::createItemRequested, this, &MainWindow::handleCreateItemRequest);
 
-    connect(indexView, &IndexView::itemShowRequested, this, &MainWindow::handleShowItemRequest);
+    // Place it in the stacked widget
+    stackedWidget->addWidget(newItemView);
+    stackedWidget->setCurrentWidget(newItemView);
 }
 
-void MainWindow::handleCreateItemRequest(Item *item)
+void MainWindow::setEditItemView(Item *item)
 {
-    libraryModel->addItem(std::unique_ptr<Item>(item));
-    indexView->populateFromLibrary(libraryModel.get());
-    stackedWidget->setCurrentWidget(indexView);
-}
+    // Clear the current view
+    clearCurrentView();
 
-void MainWindow::handleShowItemRequest(const QUuid &itemId)
-{
-    Item *item = libraryModel->getItem(itemId);
-    ShowItemView *showItemView = new ShowItemView(this, item);
-
-    connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
-    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
-
-    stackedWidget->addWidget(showItemView);
-    stackedWidget->setCurrentWidget(showItemView);
-}
-
-void MainWindow::handleEditItemRequest(const QUuid &itemId)
-{
-    Item *item = libraryModel->getItem(itemId);
+    // Initialize the EditItemView
     EditItemView *editItemView = new EditItemView(this, item);
+
+    // Connect signals and slots
+    // connect(editItemView, &EditItemView::updateItemRequested, this, &MainWindow::handleEditItemRequest);
+
+    // Place it in the stacked widget
     stackedWidget->addWidget(editItemView);
     stackedWidget->setCurrentWidget(editItemView);
 }
 
+void MainWindow::setShowItemView(Item *item)
+{
+    // Clear the current view
+    clearCurrentView();
+
+    // Initialize the ShowItemView
+    ShowItemView *showItemView = new ShowItemView(this, item);
+
+    // Connect signals and slots
+    connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
+    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
+
+    // Place it in the stacked widget
+    stackedWidget->addWidget(showItemView);
+    stackedWidget->setCurrentWidget(showItemView);
+}
+
+// CRUD slots
+void MainWindow::handleCreateItemRequest(Item *item)
+{
+    // Add the item to the library
+    libraryModel->addItem(std::unique_ptr<Item>(item));
+    // Update the index view
+    setIndexView();
+}
+
+void MainWindow::handleShowItemRequest(const QUuid &itemId)
+{
+    // Get the item from the library
+    Item *item = libraryModel->getItem(itemId);
+    // Set the show item view
+    setShowItemView(item);
+}
+
+void MainWindow::handleEditItemRequest(const QUuid &itemId)
+{
+    // Get the item from the library
+    Item *item = libraryModel->getItem(itemId);
+    // Set the edit item view
+    setEditItemView(item);
+}
+
 void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
 {
+    // Remove the item from the library
     libraryModel->removeItem(itemId);
-    indexView->populateFromLibrary(libraryModel.get());
-    stackedWidget->setCurrentWidget(indexView);
+    // Update the index view
+    setIndexView();
 }

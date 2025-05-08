@@ -16,24 +16,28 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override = default;
 
+    void clearCurrentView();
+
+signals:
+    void navigateToIndex();
+    void navigateToNewItem();
+    void navigateToEditItem(Item *item);
+    void navigateToShowItem(Item *item);
+
 private slots:
+    // CRUD slots
     void handleCreateItemRequest(Item *item);
-
     void handleShowItemRequest(const QUuid &itemId);
-
     void handleEditItemRequest(const QUuid &itemId);
     void handleDeleteItemRequest(const QUuid &itemId);
 
+    // Navigation slots
+    void setIndexView();
+    void setNewItemView();
+    void setEditItemView(Item *item);
+    void setShowItemView(Item *item);
+
 private:
     QStackedWidget *stackedWidget;
-
-    IndexView *indexView;
-    ShowItemView *showItemView;
-    NewItemView *newItemView;
-    EditItemView *editItemView;
-
     std::unique_ptr<Library> libraryModel;
-
-    void setupViews();
-    void connectSignals();
 };
