@@ -18,7 +18,7 @@ class ItemFormVisitor : public QObject, public Visitor
 
 public:
     explicit ItemFormVisitor(QObject *parent = nullptr);
-
+    ~ItemFormVisitor() override = default;
     QWidget *getResult() const { return form; }
 
     // Keep the parameters to allow future "edit item" functionality
@@ -27,7 +27,7 @@ public:
     void visit(Article &article) override;
 
 signals:
-    void createItemRequest(Item *item);
+    void createItemRequested(Item *item);
 
 private slots:
     void onCreateButtonClicked();

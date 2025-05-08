@@ -9,6 +9,9 @@
 class DebugVisitor : public Visitor
 {
 public:
+    DebugVisitor() = default;
+    ~DebugVisitor() override = default;
+
     void visit(Book &book) override;
     void visit(Movie &movie) override;
     void visit(Article &article) override;

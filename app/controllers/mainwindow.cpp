@@ -3,7 +3,7 @@
 #include "../views/newitemview.h"
 #include "../views/edititemview.h"
 #include "../views/showitemview.h"
-#include "../views/viewitemview.h"
+
 #include <QToolBar>
 #include <QAction>
 #include <QVBoxLayout>
@@ -59,15 +59,12 @@ void MainWindow::setupViews()
 
 void MainWindow::connectSignals()
 {
-    connect(newItemView, &NewItemView::createItemRequest, this, &MainWindow::handleCreateItemRequest);
-    connect(indexView, &IndexView::viewItemRequested, this, &MainWindow::handleViewItemRequest);
-    // connect(indexView, &IndexView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
-}
+    connect(newItemView, &NewItemView::createItemRequested, this, &MainWindow::handleCreateItemRequest);
 
-void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
-{
-    libraryModel->removeItem(itemId);
-    indexView->populateFromLibrary(libraryModel.get());
+    connect(indexView, &IndexView::itemShowRequested, this, &MainWindow::handleShowItemRequest);
+
+    connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
+    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
 }
 
 void MainWindow::handleCreateItemRequest(Item *item)
@@ -77,10 +74,34 @@ void MainWindow::handleCreateItemRequest(Item *item)
     stackedWidget->setCurrentWidget(indexView);
 }
 
-void MainWindow::handleViewItemRequest(const QUuid &itemId)
+void MainWindow::handleShowItemRequest(const QUuid &itemId)
 {
+    qDebug() << "handleShowItemRequest" << itemId;
     Item *item = libraryModel->getItem(itemId);
-    ViewItemView *viewItemView = new ViewItemView(this, item);
-    stackedWidget->addWidget(viewItemView);
-    stackedWidget->setCurrentWidget(viewItemView);
+    if (item)
+    {
+        ShowItemView *showItemView = new ShowItemView(this, item);
+        stackedWidget->addWidget(showItemView);
+        stackedWidget->setCurrentWidget(showItemView);
+    }
+    else
+    {
+        qDebug() << "Item not found";
+    }
+}
+
+void MainWindow::handleEditItemRequest(const QUuid &itemId)
+{
+    qDebug() << "handleEditItemRequest" << itemId;
+    Item *item = libraryModel->getItem(itemId);
+    EditItemView *editItemView = new EditItemView(this, item);
+    stackedWidget->addWidget(editItemView);
+    stackedWidget->setCurrentWidget(editItemView);
+}
+
+void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
+{
+    qDebug() << "handleDeleteItemRequest" << itemId;
+    libraryModel->removeItem(itemId);
+    indexView->populateFromLibrary(libraryModel.get());
 }

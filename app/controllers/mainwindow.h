@@ -14,10 +14,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override = default;
 
 private slots:
     void handleCreateItemRequest(Item *item);
-    void handleViewItemRequest(const QUuid &itemId);
+
+    void handleShowItemRequest(const QUuid &itemId);
+
+    void handleEditItemRequest(const QUuid &itemId);
     void handleDeleteItemRequest(const QUuid &itemId);
 
 private:

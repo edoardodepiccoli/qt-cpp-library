@@ -211,6 +211,6 @@ void ItemFormVisitor::onCreateButtonClicked()
             break;
         }
 
-        emit createItemRequest(item);
+        emit createItemRequested(item);
     }
 }

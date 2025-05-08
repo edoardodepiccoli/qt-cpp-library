@@ -27,14 +27,14 @@ void ItemCardVisitor::visit(Book &book)
     QPushButton *viewButton = new QPushButton("View Book");
     horizontalLayout->addWidget(viewButton);
 
-    QPushButton *deleteButton = new QPushButton("Delete Book");
-    horizontalLayout->addWidget(deleteButton);
+    // QPushButton *deleteButton = new QPushButton("Delete Book");
+    // horizontalLayout->addWidget(deleteButton);
 
     layout->addLayout(horizontalLayout);
 
     itemId = book.getId();
     connect(viewButton, &QPushButton::clicked, this, [this]()
-            { emit viewItemRequested(itemId); });
+            { emit itemShowRequested(itemId); });
     widget = card;
 }
 
@@ -54,14 +54,14 @@ void ItemCardVisitor::visit(Movie &movie)
     QPushButton *viewButton = new QPushButton("View Movie");
     horizontalLayout->addWidget(viewButton);
 
-    QPushButton *deleteButton = new QPushButton("Delete Movie");
-    horizontalLayout->addWidget(deleteButton);
+    // QPushButton *deleteButton = new QPushButton("Delete Movie");
+    // horizontalLayout->addWidget(deleteButton);
 
     layout->addLayout(horizontalLayout);
 
     itemId = movie.getId();
     connect(viewButton, &QPushButton::clicked, this, [this]()
-            { emit viewItemRequested(itemId); });
+            { emit itemShowRequested(itemId); });
 
     widget = card;
 }
@@ -83,14 +83,14 @@ void ItemCardVisitor::visit(Article &article)
     QPushButton *viewButton = new QPushButton("View Article");
     horizontalLayout->addWidget(viewButton);
 
-    QPushButton *deleteButton = new QPushButton("Delete Article");
-    horizontalLayout->addWidget(deleteButton);
+    // QPushButton *deleteButton = new QPushButton("Delete Article");
+    // horizontalLayout->addWidget(deleteButton);
 
     layout->addLayout(horizontalLayout);
 
     itemId = article.getId();
     connect(viewButton, &QPushButton::clicked, this, [this]()
-            { emit viewItemRequested(itemId); });
+            { emit itemShowRequested(itemId); });
 
     widget = card;
 }

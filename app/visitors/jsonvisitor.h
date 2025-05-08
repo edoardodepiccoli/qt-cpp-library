@@ -11,6 +11,7 @@ class JSONVisitor : public Visitor
 {
 public:
     QJsonObject getResult() const { return result; }
+    ~JSONVisitor() override = default;
 
     void visit(Book &book) override;
     void visit(Movie &movie) override;

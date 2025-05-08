@@ -8,11 +8,12 @@ class NewItemView : public QWidget
     Q_OBJECT
 public:
     explicit NewItemView(QWidget *parent = nullptr);
+    ~NewItemView() override = default;
 
     void setUpForm(const QString &type);
 
 signals:
-    void createItemRequest(Item *item);
+    void createItemRequested(Item *item);
 
 private:
     QVBoxLayout *mainLayout;
@@ -21,5 +22,4 @@ private:
 
 private slots:
     void onTypeChanged(const QString &type);
-    void onItemCreationRequest(Item *item);
 };

@@ -10,6 +10,7 @@
 NewItemView::NewItemView(QWidget *parent)
     : QWidget(parent)
 {
+    qDebug() << "NewItemView constructor";
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
 
@@ -56,37 +57,39 @@ void NewItemView::setUpForm(const QString &type)
     {
         Book *book = new Book();
         visitor->visit(*book);
+        delete book; // Clean up the temporary book
     }
     else if (type == "movie")
     {
         Movie *movie = new Movie();
         visitor->visit(*movie);
+        delete movie; // Clean up the temporary movie
     }
     else if (type == "article")
     {
         Article *article = new Article();
         visitor->visit(*article);
+        delete article; // Clean up the temporary article
     }
 
     QWidget *form = visitor->getResult();
-    mainLayout->addWidget(form);
-    currentForm = form;
+    if (form)
+    {
+        mainLayout->addWidget(form);
+        currentForm = form;
 
-    connect(visitor, &ItemFormVisitor::createItemRequest,
-            this, &NewItemView::onItemCreationRequest);
+        connect(visitor, &ItemFormVisitor::createItemRequested,
+                this, &NewItemView::createItemRequested); // Qt should automatically forward the item pointer, I hope
+    }
+    else
+    {
+        qDebug() << "Error: Form widget is null";
+        delete visitor;
+    }
 }
 
 void NewItemView::onTypeChanged(const QString &type)
 {
     qDebug() << "Selected item type:" << type;
     setUpForm(type);
-}
-
-void NewItemView::onItemCreationRequest(Item *item)
-{
-    qDebug() << "Item creation bubbled up to NewItemView";
-    emit createItemRequest(item);
-
-    qDebug() << "Setting up form again";
-    setUpForm("book");
 }

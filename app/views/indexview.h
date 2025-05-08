@@ -11,11 +11,13 @@ class IndexView : public QWidget
 
 public:
     explicit IndexView(QWidget *parent = nullptr);
+    ~IndexView() override = default;
+
     void populateFromLibrary(Library *library);
 
 signals:
     // Qt automatically forwards the parameters when the signatures match, cool stuff
-    void viewItemRequested(const QUuid &itemId);
+    void itemShowRequested(const QUuid &itemId);
 
 private:
     QVBoxLayout *mainLayout;

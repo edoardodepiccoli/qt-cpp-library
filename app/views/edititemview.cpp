@@ -1,12 +1,24 @@
-#include "edititemview.h"
 #include <QVBoxLayout>
 #include <QLabel>
 
-EditItemView::EditItemView(QWidget *parent)
-    : QWidget(parent)
+#include "edititemview.h"
+#include "../models/item.h"
+
+EditItemView::EditItemView(QWidget *parent, Item *item)
+    : QWidget(parent), item(item)
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    qDebug() << "EditItemView constructor";
+    layout = new QVBoxLayout(this);
+
     layout->addWidget(new QLabel("This is EditItemView"));
+    if (item)
+    {
+        layout->addWidget(new QLabel(item->getTitle()));
+    }
+    else
+    {
+        layout->addWidget(new QLabel("No item selected"));
+    }
     layout->addStretch();
 
     setLayout(layout);

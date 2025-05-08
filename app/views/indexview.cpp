@@ -10,6 +10,7 @@
 IndexView::IndexView(QWidget *parent)
     : QWidget(parent), libraryModel(nullptr)
 {
+    qDebug() << "IndexView constructor";
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
 
@@ -53,8 +54,8 @@ void IndexView::populateFromLibrary(Library *library)
                 w->setStyleSheet("background-color: gray;");
                 mainLayout->addWidget(w);
 
-                connect(visitor, &ItemCardVisitor::viewItemRequested,
-                        this, &IndexView::viewItemRequested);
+                connect(visitor, &ItemCardVisitor::itemShowRequested,
+                        this, &IndexView::itemShowRequested);
             }
             else
             {
