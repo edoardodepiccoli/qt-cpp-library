@@ -8,7 +8,6 @@
 EditItemView::EditItemView(QWidget *parent, Item *item)
     : QWidget(parent), item(item)
 {
-    qDebug() << "EditItemView constructor";
     layout = new QVBoxLayout(this);
 
     // Create the form visitor in edit mode

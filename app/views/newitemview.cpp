@@ -10,7 +10,6 @@
 NewItemView::NewItemView(QWidget *parent)
     : QWidget(parent)
 {
-    qDebug() << "NewItemView constructor";
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
 
@@ -41,12 +40,9 @@ NewItemView::NewItemView(QWidget *parent)
 
 void NewItemView::setUpForm(const QString &type)
 {
-    qDebug() << "Setting up form";
-
     if (currentForm)
     {
         mainLayout->removeWidget(currentForm);
-        qDebug() << "Removing previous form";
         delete currentForm;
         currentForm = nullptr;
     }
@@ -83,13 +79,11 @@ void NewItemView::setUpForm(const QString &type)
     }
     else
     {
-        qDebug() << "Error: Form widget is null";
         delete visitor;
     }
 }
 
 void NewItemView::onTypeChanged(const QString &type)
 {
-    qDebug() << "Selected item type:" << type;
     setUpForm(type);
 }

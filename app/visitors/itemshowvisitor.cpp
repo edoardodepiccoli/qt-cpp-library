@@ -51,11 +51,9 @@ void ItemShowVisitor::visit(Book &book)
 
     itemId = book.getId();
     connect(deleteButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "deleteItemRequested in ItemShowVisitor" << itemId;
-                emit deleteItemRequested(itemId); });
+            { emit deleteItemRequested(itemId); });
     connect(editButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "editItemRequested in ItemShowVisitor" << itemId;
-                emit editItemRequested(itemId); });
+            { emit editItemRequested(itemId); });
 
     widget = result;
 }
@@ -85,11 +83,9 @@ void ItemShowVisitor::visit(Movie &movie)
 
     itemId = movie.getId();
     connect(deleteButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "deleteItemRequested in ItemShowVisitor" << itemId;
-                emit deleteItemRequested(itemId); });
+            { emit deleteItemRequested(itemId); });
     connect(editButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "editItemRequested in ItemShowVisitor" << itemId;
-                emit editItemRequested(itemId); });
+            { emit editItemRequested(itemId); });
 
     widget = result;
 }
@@ -120,11 +116,9 @@ void ItemShowVisitor::visit(Article &article)
 
     itemId = article.getId();
     connect(deleteButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "deleteItemRequested in ItemShowVisitor" << itemId;
-                emit deleteItemRequested(itemId); });
+            { emit deleteItemRequested(itemId); });
     connect(editButton, &QPushButton::clicked, this, [this]()
-            { qDebug() << "editItemRequested in ItemShowVisitor" << itemId;
-                emit editItemRequested(itemId); });
+            { emit editItemRequested(itemId); });
 
     widget = result;
 }

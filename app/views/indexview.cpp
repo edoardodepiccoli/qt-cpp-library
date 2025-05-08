@@ -10,7 +10,6 @@
 IndexView::IndexView(QWidget *parent)
     : QWidget(parent), libraryModel(nullptr)
 {
-    qDebug() << "IndexView constructor";
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
 

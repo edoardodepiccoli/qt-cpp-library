@@ -7,8 +7,6 @@
 
 ShowItemView::ShowItemView(QWidget *parent, Item *item) : QWidget(parent), item(item)
 {
-    qDebug() << "ShowItemView constructor";
-
     visitor = std::make_unique<ItemShowVisitor>(this);
     if (this->item)
     {
