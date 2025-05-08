@@ -15,7 +15,7 @@ public:
         const QString &comment = "",
         const QString &author = "",
         const QString &link = "");
-
+    ~Article() override = default;
     QString getLink() const { return link; }
     void setLink(const QString &l) { link = l; }
 

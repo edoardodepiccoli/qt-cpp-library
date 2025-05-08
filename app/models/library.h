@@ -14,6 +14,7 @@ class Library
 {
 public:
     Library();
+    ~Library() = default;
 
     void addItem(std::unique_ptr<Item> item);
     void removeItem(const QUuid &id);     // Changed to use ID

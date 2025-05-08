@@ -11,6 +11,7 @@ public:
     Book(const QString &title = "", const QString &description = "",
          int year = 0, const int &review = 3, const QString &comment = "",
          const QString &author = "");
+    ~Book() override = default;
 
     QString getAuthor() const { return author; }
     void setAuthor(const QString &a) { author = a; }
