@@ -95,7 +95,7 @@ void MainWindow::setEditItemView(Item *item)
     EditItemView *editItemView = new EditItemView(this, item);
 
     // Connect signals and slots
-    // connect(editItemView, &EditItemView::updateItemRequested, this, &MainWindow::handleEditItemRequest);
+    connect(editItemView, &EditItemView::updateItemRequested, this, &MainWindow::handleUpdateItemRequest);
 
     // Place it in the stacked widget
     stackedWidget->addWidget(editItemView);
@@ -112,7 +112,16 @@ void MainWindow::setShowItemView(Item *item)
 
     // Connect signals and slots
     connect(showItemView, &ShowItemView::deleteItemRequested, this, &MainWindow::handleDeleteItemRequest);
-    connect(showItemView, &ShowItemView::editItemRequested, this, &MainWindow::handleEditItemRequest);
+
+    // This is a lambda function that takes an itemId and sets the edit item view to the item with that id
+    connect(showItemView, &ShowItemView::editItemRequested, this, [this](const QUuid &itemId)
+            {
+        // Get the item from the library
+        Item *item = libraryModel->getItem(itemId);
+        // Set the edit item view
+        if (item) {
+            setEditItemView(item);
+        } });
 
     // Place it in the stacked widget
     stackedWidget->addWidget(showItemView);
@@ -122,9 +131,7 @@ void MainWindow::setShowItemView(Item *item)
 // CRUD slots
 void MainWindow::handleCreateItemRequest(Item *item)
 {
-    // Add the item to the library
     libraryModel->addItem(std::unique_ptr<Item>(item));
-    // Update the index view
     setIndexView();
 }
 
@@ -136,12 +143,20 @@ void MainWindow::handleShowItemRequest(const QUuid &itemId)
     setShowItemView(item);
 }
 
-void MainWindow::handleEditItemRequest(const QUuid &itemId)
+void MainWindow::handleEditItemRequest(Item *item)
 {
-    // Get the item from the library
-    Item *item = libraryModel->getItem(itemId);
-    // Set the edit item view
-    setEditItemView(item);
+    if (libraryModel->updateItem(item->getId(), std::unique_ptr<Item>(item)))
+    {
+        setIndexView();
+    }
+}
+
+void MainWindow::handleUpdateItemRequest(Item *item)
+{
+    if (libraryModel->updateItem(item->getId(), std::unique_ptr<Item>(item)))
+    {
+        setIndexView();
+    }
 }
 
 void MainWindow::handleDeleteItemRequest(const QUuid &itemId)

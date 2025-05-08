@@ -18,17 +18,12 @@ public:
 
     void clearCurrentView();
 
-signals:
-    void navigateToIndex();
-    void navigateToNewItem();
-    void navigateToEditItem(Item *item);
-    void navigateToShowItem(Item *item);
-
 private slots:
     // CRUD slots
     void handleCreateItemRequest(Item *item);
     void handleShowItemRequest(const QUuid &itemId);
-    void handleEditItemRequest(const QUuid &itemId);
+    void handleEditItemRequest(Item *item);
+    void handleUpdateItemRequest(Item *item);
     void handleDeleteItemRequest(const QUuid &itemId);
 
     // Navigation slots
