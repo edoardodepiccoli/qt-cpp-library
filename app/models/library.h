@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <memory>
-#include <QMap>
 #include <QUuid>
 #include "item.h"
 #include "book.h"
@@ -17,12 +16,13 @@ public:
     ~Library() = default;
 
     void addItem(std::unique_ptr<Item> item);
-    void removeItem(const QUuid &id);     // Changed to use ID
-    void removeItem(int index);           // Keep old version for compatibility if needed
-    Item *getItem(const QUuid &id) const; // New ID-based lookup
-    Item *getItem(int index) const;       // Keep old version
+    void removeItem(const QUuid &id);
+    void removeItem(int index); // Keep old version for compatibility with the CLI stuff (should probably remove this)
+    Item *getItem(const QUuid &id) const;
+    Item *getItem(int index) const; // Keep old version
     int getItemCount() const;
     const std::vector<std::unique_ptr<Item>> &getItems() const { return items; }
+    bool updateItem(const QUuid &id, std::unique_ptr<Item> newItem);
 
     bool saveToFile();
     bool loadFromFile();
@@ -31,7 +31,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<Item>> items;
-    QMap<QUuid, Item *> idToItemMap; // New mapping for quick lookup (idk if this is necessary but it seemed cool to use lmao)
+    // Removed the lookup map because I thought it was cool but it was completely unnecessary (duh)
 };
 
 #endif // LIBRARY_H

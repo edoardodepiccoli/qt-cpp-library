@@ -16,10 +16,7 @@ void Library::addItem(std::unique_ptr<Item> item)
     if (!item)
         return;
 
-    QUuid id = item->getId();
-    Item *rawPtr = item.get();
     items.push_back(std::move(item));
-    idToItemMap[id] = rawPtr; // Add to lookup map
     saveToFile();
 }
 
@@ -33,20 +30,15 @@ void Library::removeItem(const QUuid &id)
 
     if (it != items.end())
     {
-        idToItemMap.remove(id); // Remove from lookup map
         items.erase(it);
         saveToFile();
     }
 }
 
-// Only kept this because of the CLI tools I created earlier
-// TODO delete this once the UI is finished and the CLI is not necessary anymore
 void Library::removeItem(int index)
 {
     if (index >= 0 && index < static_cast<int>(items.size()))
     {
-        QUuid id = items[index]->getId();
-        idToItemMap.remove(id); // Remove from lookup map
         items.erase(items.begin() + index);
         saveToFile();
     }
@@ -54,11 +46,15 @@ void Library::removeItem(int index)
 
 Item *Library::getItem(const QUuid &id) const
 {
-    return idToItemMap.value(id, nullptr);
+    auto it = std::find_if(items.begin(), items.end(),
+                           [&id](const std::unique_ptr<Item> &item)
+                           {
+                               return item->getId() == id;
+                           });
+
+    return it != items.end() ? it->get() : nullptr;
 }
 
-// Only kept this because of the CLI tools I created earlier
-// TODO delete this once the UI is finished and the CLI is not necessary anymore
 Item *Library::getItem(int index) const
 {
     if (index >= 0 && index < static_cast<int>(items.size()))
@@ -112,7 +108,6 @@ bool Library::loadFromFile()
 
     QJsonArray jsonArray = doc.array();
     items.clear();
-    idToItemMap.clear(); // Clear the lookup map
 
     for (const QJsonValue &value : jsonArray)
     {
@@ -139,23 +134,20 @@ bool Library::loadFromFile()
 
         if (item)
         {
-            // Add ID handling if stored in JSON
             if (obj.contains("id") && !obj["id"].isNull())
             {
                 QUuid loadedId(obj["id"].toString());
                 if (!loadedId.isNull())
                 {
-                    item->setId(loadedId); // Only set if valid UUID
+                    item->setId(loadedId);
                 }
                 else
                 {
-                    // Handle invalid UUID case (generate new one or use default)
                     item->setId(QUuid::createUuid());
                 }
             }
             else
             {
-                // No ID in JSON - generate new one
                 item->setId(QUuid::createUuid());
             }
 
@@ -165,12 +157,29 @@ bool Library::loadFromFile()
             item->setReview(obj["review"].toInt());
             item->setComment(obj["comment"].toString());
 
-            idToItemMap[item->getId()] = item.get(); // Add to lookup map
             items.push_back(std::move(item));
         }
     }
 
     return true;
+}
+
+bool Library::updateItem(const QUuid &id, std::unique_ptr<Item> newItem)
+{
+    auto it = std::find_if(items.begin(), items.end(),
+                           [&id](const std::unique_ptr<Item> &item)
+                           {
+                               return item->getId() == id;
+                           });
+
+    if (it != items.end())
+    {
+        newItem->setId(id);
+        *it = std::move(newItem);
+        saveToFile();
+        return true;
+    }
+    return false;
 }
 
 void Library::accept(Visitor &visitor)
