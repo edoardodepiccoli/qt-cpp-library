@@ -51,6 +51,9 @@
         "qwidget": "cpp",
         "qvboxlayout": "cpp",
         "qstring": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "qpushbutton": "cpp",
+        "qdebug": "cpp",
+        "quuid": "cpp"
     }
 }

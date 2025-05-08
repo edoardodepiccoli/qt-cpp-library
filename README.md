@@ -51,3 +51,6 @@ How can I differentiate between the various types?
 Maybe create the object at the level of the form returned by the `ItemFormWidget`, then simply pass the pointer up to the parents?  
 This could be a decent idea, I hope (it was, I hope, again)
 ```
+- [x] Create a barebone `ViewItemView` (or something with a more decent name, edit: kept this name because it is funny ahah) to display all item's info
+- [ ] Move delete button to `ViewItemView`
+- [ ] Add "Edit Item" button to `ViewItemView`
