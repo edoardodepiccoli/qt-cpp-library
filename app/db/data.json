@@ -42,16 +42,6 @@
         "year": 2020
     },
     {
-        "comment": "bella",
-        "description": "who tf doesnt know harry potter",
-        "director": "bo",
-        "id": "{083dfe6b-7834-435b-a8e5-5a2267cea06c}",
-        "review": 4,
-        "title": "harry potter",
-        "type": "movie",
-        "year": 2008
-    },
-    {
         "comment": "bel film marvel",
         "description": "film sul wakanda e black panther",
         "director": "idk",
@@ -71,5 +61,107 @@
         "title": "article about why pizza is great",
         "type": "article",
         "year": 2013
+    },
+    {
+        "comment": "A sci-fi classic that stands the test of time.",
+        "description": "A team travels through a wormhole near Saturn to find a new home for humanity.",
+        "director": "Stanley Kubrick",
+        "id": "{a1b2c3d4-e5f6-7890-1234-567890abcdef}",
+        "review": 5,
+        "title": "2001: A Space Odyssey",
+        "type": "movie",
+        "year": 1968
+    },
+    {
+        "author": "George Orwell",
+        "comment": "A disturbing look at a dystopian future.",
+        "description": "A cautionary tale about totalitarianism.",
+        "id": "{b2c3d4e5-f6g7-8901-2345-67890abcdef1}",
+        "review": 5,
+        "title": "Nineteen Eighty-Four",
+        "type": "book",
+        "year": 1949
+    },
+    {
+        "author": "J.R.R. Tolkien",
+        "comment": "An epic fantasy adventure.",
+        "description": "A hobbit's quest to destroy a powerful ring.",
+        "id": "{c3d4e5f6-g7h8-9012-3456-7890abcdef12}",
+        "review": 5,
+        "title": "The Fellowship of the Ring",
+        "type": "book",
+        "year": 1954
+    },
+    {
+        "author": "Tim Urban",
+        "comment": "An insightful look at procrastination.",
+        "description": "Exploring the mind of a procrastinator.",
+        "id": "{d4e5f6g7-h8i9-0123-4567-890abcdef123}",
+        "link": "https://waitbutwhy.com/2013/10/why-procrastinators-procrastinate.html",
+        "review": 5,
+        "title": "Why Procrastinators Procrastinate",
+        "type": "article",
+        "year": 2013
+    },
+    {
+        "comment": "A thrilling action movie.",
+        "description": "A former assassin is drawn back into the criminal underworld.",
+        "director": "Chad Stahelski",
+        "id": "{e5f6g7h8-i9j0-1234-5678-90abcdef1234}",
+        "review": 4,
+        "title": "John Wick",
+        "type": "movie",
+        "year": 2014
+    },
+    {
+        "author": "Jane Austen",
+        "comment": "A witty and charming romance.",
+        "description": "The story of the Bennet sisters and their search for love.",
+        "id": "{f6g7h8i9-j0k1-2345-6789-0abcdef12345}",
+        "review": 4,
+        "title": "Pride and Prejudice",
+        "type": "book",
+        "year": 1813
+    },
+    {
+        "author": "Yuval Noah Harari",
+        "comment": "A fascinating look at human history.",
+        "description": "Exploring the history of humankind from the Stone Age to the twenty-first century.",
+        "id": "{g7h8i9j0-k1l2-3456-7890-abcdef123456}",
+        "review": 5,
+        "title": "Sapiens: A Brief History of Humankind",
+        "type": "book",
+        "year": 2011
+    },
+    {
+        "author": "Paul Graham",
+        "comment": "Great advice for startups.",
+        "description": "Essays on startups and technology.",
+        "id": "{h8i9j0k1-l2m3-4567-890a-bcdef1234567}",
+        "link": "http://www.paulgraham.com/startuplessons.html",
+        "review": 5,
+        "title": "Startup Lessons",
+        "type": "article",
+        "year": 2004
+    },
+    {
+        "comment": "A gripping sci-fi thriller.",
+        "description": "A team is sent to a distant planet to investigate a mysterious signal.",
+        "director": "Denis Villeneuve",
+        "id": "{i9j0k1l2-m3n4-5678-90ab-cdef12345678}",
+        "review": 4,
+        "title": "Arrival",
+        "type": "movie",
+        "year": 2016
+    },
+    {
+        "author": "Stephen King",
+        "comment": "A terrifying horror novel.",
+        "description": "A writer's car becomes a vessel for evil.",
+        "id": "{j0k1l2m3-n4o5-6789-0abc-def123456789}",
+        "review": 4,
+        "title": "Christine",
+        "type": "book",
+        "year": 1983
     }
 ]
