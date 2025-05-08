@@ -12,8 +12,24 @@ ItemShowVisitor::ItemShowVisitor(QObject *parent)
 {
 }
 
+ItemShowVisitor::~ItemShowVisitor()
+{
+    clearWidget();
+}
+
+void ItemShowVisitor::clearWidget()
+{
+    if (widget)
+    {
+        delete widget;
+        widget = nullptr;
+    }
+}
+
 void ItemShowVisitor::visit(Book &book)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *result = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(result);
 
@@ -46,6 +62,8 @@ void ItemShowVisitor::visit(Book &book)
 
 void ItemShowVisitor::visit(Movie &movie)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *result = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(result);
 
@@ -78,6 +96,8 @@ void ItemShowVisitor::visit(Movie &movie)
 
 void ItemShowVisitor::visit(Article &article)
 {
+    clearWidget(); // Clear any existing widget before creating a new one
+
     QWidget *result = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(result);
 

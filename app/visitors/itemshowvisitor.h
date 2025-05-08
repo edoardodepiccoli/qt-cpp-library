@@ -16,7 +16,7 @@ class ItemShowVisitor : public QObject, public Visitor
 
 public:
     explicit ItemShowVisitor(QObject *parent = nullptr);
-    ~ItemShowVisitor() override = default;
+    ~ItemShowVisitor() override;
 
     QWidget *getResult() const { return widget; }
     QUuid getItemId() const { return itemId; }
@@ -30,6 +30,7 @@ signals:
     void editItemRequested(const QUuid &itemId);
 
 private:
+    void clearWidget();
     QWidget *widget = nullptr;
     QUuid itemId;
 };
