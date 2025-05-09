@@ -1,77 +1,95 @@
-# 💪 Qt C++ Library
+# Qt Library Management System
 
-This is a Qt C++ Library Management app. 
-Its main goal is to showcase the programmer's ability to work with C++ OOP concepts, especially polymorphism (💀).
+A comprehensive C++ library management application built with Qt, demonstrating advanced object-oriented programming concepts and design patterns.
 
-This is to say, I coded this because of a university assignment.
+## Overview
 
-Enjoy :)
+This application serves as a practical implementation of a library management system, showcasing:
+- Object-oriented programming principles
+- Polymorphism and inheritance patterns
+- Qt framework integration
+- MVC (Model-View-Controller) architecture
+- Visitor design pattern implementation
 
----
+## Getting Started
 
-## 💼 "Back-end" and Business Logic
+### Building the Application
 
-### Models, Views and Controllers
-
-See models, views and controllers folders.
-
-### Visitors, CLI and db
-
-Same as above, see folder names. Pretty easy to figure out everything.
-
----
-
-## 🎨 "Front-end" and User Experience
-
-### UX and Navigation Flow
-
-This navitation flow is heavily inspired (aka copied) by the RESTful routing pattern adopted by Ruby On Rails.
-I love Ruby On Rails.
-
-| Action         | REST Route          | View Transition             |
-| -------------- | ------------------- | --------------------------- |
-| List all items | GET /items          | → IndexView                 |
-| Show item      | GET /items/:id      | IndexView → ShowItemView    |
-| New item form  | GET /items/new      | IndexView → NewItemView     |
-| Edit item form | GET /items/:id/edit | ShowItemView → EditItemView |
-| Create item    | POST /items         | NewItemView → IndexView     |
-| Update item    | PUT /items/:id      | EditItemView → ShowItemView |
-| Delete item    | DELETE /items/:id   | ShowItemView → IndexView    |
-
-## TODO
-
-- [x] Create `NewItemView` page  
-  - [x] Create an `ItemFormVisitor` that returns different types of form based on the item type  
-    - [x] Take inspiration from the `ItemCardVisitor` to handle state  
-  - [x] The form sends a signal that triggers a private slot that sends a signal up when it creates a new item  
-  - [x] The signal is intercepted by the `NewItemView` class that triggers a private slot that propagates the signal  
-  - [x] The signal is intercepted by the `MainWindow` that simply creates the new item
+1. Run the build script:
+```bash
+./build.sh
 ```
-How can I differentiate between the various types?  
-Maybe create the object at the level of the form returned by the `ItemFormWidget`, then simply pass the pointer up to the parents?  
-This could be a decent idea, I hope (it was, I hope, again)
-```
-- [x] Create a barebone `ViewItemView` (or something with a more decent name, edit: kept this name because it is funny ahah) to display all item's info
-- [x] Move delete button to `ViewItemView`
-- [x] Add "Edit Item" button to `ViewItemView`
 
-- [x] Create a working `EditItemView`
+### Running the Application
+
+The application can be run in two modes:
+
+1. **GUI Mode** (default):
+```bash
+./build/div/.../os/qt-library
 ```
-Maybe you could use the same form used by the NewItemView but modifying it a little bit to store a pointer to the item.
-Watch out and implement (or not) proper ownership!
-When editing item, since Library class does not have anything, simply do this:
-- Pass the item to the EditItemView
-- Populate the form with its values
-  - Do not allow switching type
-  - Add update and back buttons
-- When clicking back simply send a signal to mainwindow
-- When clicking update, find a way to update its fields
-- Probably, you should send a Item * to the mainwindow, then call the update method in the Library with it (do all the type checking stuff in it with some sort of cast)
+
+2. **CLI Mode** (for testing backend business logic):
+```bash
+./build/bin/.../qt-library --cli
 ```
-- [x] Create a working search bar (with cool fuzzy finding like that neovim plugin) at the top of the index view.
-```
-Make it use a method of the Library for sure. Keep things simple, just create the method that takes a string and returns the results...
-Be really careful with pointer ownership tho. This is the tricky part about returning results.
-Also, if you want to make things simpler, simply refresh the whole UI of the IndexView from the MainWindow with the updated Library.
-```
-- [ ] Refactor the current memory management mess by only using smart pointers, EVERYWHERE 
+
+The CLI mode provides a simple command-line interface to test the core functionality without the graphical user interface.
+
+## Architecture
+
+### Core Components
+
+The application follows a structured architecture with clear separation of concerns:
+
+- **Models**: Data structures and business logic
+- **Views**: User interface components
+- **Controllers**: Application flow and state management
+- **Visitors**: Implementation of the visitor pattern for type-specific operations
+- **CLI**: Command-line interface components
+- **Database**: Data persistence layer
+
+### Navigation Flow
+
+The application's navigation flow is inspired by RESTful patterns commonly used in web applications (like Ruby On Rails web apps), adapted for a desktop GUI context:
+
+| Action         | View         | View Transition             |
+| -------------- | ------------ | --------------------------- |
+| List all items | IndexView    | → IndexView                 |
+| Show item      | ShowItemView | IndexView → ShowItemView    |
+| New item form  | NewItemView  | IndexView → NewItemView     |
+| Edit item form | EditItemView | ShowItemView → EditItemView |
+| Create item    | NewItemView  | NewItemView → IndexView     |
+| Update item    | EditItemView | EditItemView → ShowItemView |
+| Delete item    | ShowItemView | ShowItemView → IndexView    |
+
+This pattern provides a clear and intuitive way to navigate between different views while maintaining a consistent user experience.
+
+## Features
+
+- Complete CRUD operations for library items
+- Dynamic form generation based on item type
+- Fuzzy search functionality
+- Type-safe item management
+- Modern Qt-based user interface
+
+## Development Status
+
+### Completed Features
+- ✅ New item creation with dynamic form generation
+- ✅ Item viewing and detailed information display
+- ✅ Item editing functionality
+- ✅ Delete operations
+- ✅ Search capabilities with fuzzy-like matching
+
+### Planned Improvements
+- 🔄 Memory management optimization using smart pointers
+- 🔄 Better UI styling
+
+## Technical Details
+
+The application leverages several key design patterns:
+- Visitor pattern for type-specific operations
+- MVC pattern for clean architecture
+- Signal-slot mechanism for Qt-based event handling
+- Smart pointer management for memory safety
