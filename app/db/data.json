@@ -1,15 +1,5 @@
 [
     {
-        "comment": "cool movie about space",
-        "description": "movie about space (interstellar 3 talks about space, again)",
-        "director": "chris nolan",
-        "id": "{91fd2c35-2e09-45c7-8852-6c43cbad9c3e}",
-        "review": 5,
-        "title": "interstellar 3",
-        "type": "movie",
-        "year": 2015
-    },
-    {
         "author": "DHH",
         "comment": "still have to read this article tbh",
         "description": "The vast majority of web applications should start life as a Majestic Monolith: A single codebase that does everything the application needs to do. ",
@@ -37,7 +27,7 @@
         "id": "{cab16060-4e36-4766-acc6-b8bc8249f251}",
         "link": "https://dev.37signals.com/a-vanilla-rails-stack-is-plenty/",
         "review": 5,
-        "title": "A Vanilla Rails Stack Is Plenty",
+        "title": "A Vanilla Rails Stack Is Plenty - 2",
         "type": "article",
         "year": 2020
     },
@@ -78,7 +68,7 @@
         "description": "A cautionary tale about totalitarianism.",
         "id": "{02de6cab-ea77-4e0f-b140-f9a96af356c3}",
         "review": 5,
-        "title": "Nineteen Eighty-Four",
+        "title": "1984",
         "type": "book",
         "year": 1949
     },
