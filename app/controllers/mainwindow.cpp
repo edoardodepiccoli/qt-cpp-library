@@ -12,7 +12,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      stackedWidget(new QStackedWidget),
+      stackedWidget(nullptr),
       libraryModel(std::make_unique<Library>())
 {
     resize(800, 600);
@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Set up layout for the central widget
     QVBoxLayout *layout = new QVBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
+
+    // Create and parent the stacked widget to the central widget
+    stackedWidget = new QStackedWidget(central);
     // Add stacked widget to layout
     layout->addWidget(stackedWidget);
 
@@ -33,23 +36,26 @@ MainWindow::MainWindow(QWidget *parent)
     connect(indexAction, &QAction::triggered, this, &MainWindow::setIndexView);
     connect(newItemAction, &QAction::triggered, this, &MainWindow::setNewItemView);
 
-    // Set the IndexView as the initial view
-    setIndexView();
-
-    // Set layout on central widget
-    central->setLayout(layout);
     // Set central widget
     setCentralWidget(central);
+
+    // Set the IndexView as the initial view
+    setIndexView();
 }
 
 void MainWindow::clearCurrentView()
 {
     // Get the current widget
     QWidget *currentWidget = stackedWidget->currentWidget();
-    // Remove it from the stacked widget
-    stackedWidget->removeWidget(currentWidget);
-    // Delete it
-    delete currentWidget;
+    // Only remove and delete if we have a valid widget
+    // Fortunately, Qt automatically handles the deletion of an inexistent widget and does nothing, very handy
+    if (currentWidget)
+    {
+        // Remove it from the stacked widget
+        stackedWidget->removeWidget(currentWidget);
+        // Delete it
+        delete currentWidget;
+    }
 }
 
 // Navigation slots
