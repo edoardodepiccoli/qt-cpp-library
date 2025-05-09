@@ -148,24 +148,24 @@ QString Library::getDefaultImagePath(const Item *item) const
 {
     if (!item)
     {
-        return "app/db/images/default.png";
+        return "app/db/default.png";
     }
 
     // Return type-specific default images
     if (dynamic_cast<const Book *>(item))
     {
-        return "app/db/images/default_book.png";
+        return "app/db/default_book.png";
     }
     else if (dynamic_cast<const Movie *>(item))
     {
-        return "app/db/images/default_movie.png";
+        return "app/db/default_movie.png";
     }
     else if (dynamic_cast<const Article *>(item))
     {
-        return "app/db/images/default_article.png";
+        return "app/db/default_article.png";
     }
 
-    return "app/db/images/default.png";
+    return "app/db/default.png";
 }
 
 void Library::removeItemImage(const QUuid &id)

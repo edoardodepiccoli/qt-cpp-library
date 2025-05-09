@@ -33,17 +33,17 @@ QString ItemShowVisitor::getDefaultImagePath(const QString &type) const
 {
     if (type.contains("Book"))
     {
-        return "app/db/images/default_book.png";
+        return "app/db/default_book.png";
     }
     else if (type.contains("Movie"))
     {
-        return "app/db/images/default_movie.png";
+        return "app/db/default_movie.png";
     }
     else if (type.contains("Article"))
     {
-        return "app/db/images/default_article.png";
+        return "app/db/default_article.png";
     }
-    return "app/db/images/default.png";
+    return "app/db/default.png";
 }
 
 QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QString &type)
@@ -69,7 +69,7 @@ QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QStr
         else
         {
             // If type-specific default doesn't exist, try generic default
-            pixmap.load("app/db/images/default.png");
+            pixmap.load("app/db/default.png");
         }
     }
 
