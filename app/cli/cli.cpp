@@ -42,9 +42,32 @@ void CLI::processCommand(const QString &command)
     {
         listItems();
     }
+    else if (command == "search")
+    {
+        searchItems();
+    }
     else
     {
         showError("Unknown command. Type 'help' for available commands.");
+    }
+}
+
+void CLI::searchItems()
+{
+    QString query = readInput("Enter search query: ");
+    std::vector<Item *> items = library.searchItems(query);
+    if (items.size() > 0)
+    {
+        out << "Found items:\n";
+        for (Item *item : items)
+        {
+            DebugVisitor debugVisitor;
+            item->accept(debugVisitor);
+        }
+    }
+    else
+    {
+        out << "No items found.\n";
     }
 }
 
@@ -108,7 +131,8 @@ void CLI::showHelp()
     out << "  remove - Remove an item by number\n";
     out << "  list   - List all items\n";
     out << "  help   - Show this help message\n";
-    out << "  exit   - Exit the program\n\n";
+    out << "  exit   - Exit the program\n";
+    out << "  search - Search for an item\n\n";
 }
 
 void CLI::showError(const QString &message)
