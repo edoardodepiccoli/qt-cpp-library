@@ -23,6 +23,7 @@ public:
     int getItemCount() const;
     const std::vector<std::unique_ptr<Item>> &getItems() const { return items; }
     bool updateItem(const QUuid &id, std::unique_ptr<Item> newItem);
+    std::vector<Item *> searchItems(const QString &query) const;
 
     bool saveToFile();
     bool loadFromFile();

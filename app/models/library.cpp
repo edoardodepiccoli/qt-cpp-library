@@ -189,3 +189,54 @@ void Library::accept(Visitor &visitor)
         item->accept(visitor);
     }
 }
+
+std::vector<Item *> Library::searchItems(const QString &query) const
+{
+    std::vector<Item *> results;
+    QString lowerQuery = query.toLower();
+
+    for (const auto &item : items)
+    {
+        bool found = false;
+
+        // Search in common fields
+        if (item->getTitle().toLower().contains(lowerQuery) ||
+            item->getDescription().toLower().contains(lowerQuery) ||
+            item->getComment().toLower().contains(lowerQuery) ||
+            QString::number(item->getYear()).contains(lowerQuery) ||
+            QString::number(item->getReview()).contains(lowerQuery))
+        {
+            results.push_back(item.get());
+            continue;
+        }
+
+        // Search in specific fields based on item type
+        if (auto book = dynamic_cast<Book *>(item.get()))
+        {
+            if (book->getAuthor().toLower().contains(lowerQuery))
+            {
+                results.push_back(item.get());
+                continue;
+            }
+        }
+        else if (auto movie = dynamic_cast<Movie *>(item.get()))
+        {
+            if (movie->getDirector().toLower().contains(lowerQuery))
+            {
+                results.push_back(item.get());
+                continue;
+            }
+        }
+        else if (auto article = dynamic_cast<Article *>(item.get()))
+        {
+            if (article->getAuthor().toLower().contains(lowerQuery) ||
+                article->getLink().toLower().contains(lowerQuery))
+            {
+                results.push_back(item.get());
+                continue;
+            }
+        }
+    }
+
+    return results;
+}
