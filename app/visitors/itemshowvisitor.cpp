@@ -1,11 +1,16 @@
 #include "itemshowvisitor.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QFrame>
 #include <QPushButton>
 #include <QUuid>
 #include <QDebug>
+#include <QPixmap>
+#include <QFileInfo>
+#include <QStackedLayout>
+#include <QSizePolicy>
 
 ItemShowVisitor::ItemShowVisitor(QObject *parent)
     : QObject(parent), widget(nullptr)
@@ -26,130 +31,189 @@ void ItemShowVisitor::clearWidget()
     }
 }
 
-void ItemShowVisitor::visit(Book &book)
+QString ItemShowVisitor::getDefaultImagePath(const QString &type) const
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    if (type.contains("Book"))
+    {
+        return "app/db/images/default_book.png";
+    }
+    else if (type.contains("Movie"))
+    {
+        return "app/db/images/default_movie.png";
+    }
+    else if (type.contains("Article"))
+    {
+        return "app/db/images/default_article.png";
+    }
+    return "app/db/images/default.png";
+}
 
-    QWidget *result = new QFrame;
-    QVBoxLayout *layout = new QVBoxLayout(result);
+QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QString &type)
+{
+    QWidget *imageWidget = new QWidget;
+    QVBoxLayout *imageLayout = new QVBoxLayout(imageWidget);
+    imageLayout->setContentsMargins(0, 0, 0, 0);
 
-    layout->addWidget(new QLabel("📚 Book"));
-    layout->addWidget(new QLabel("Title: " + book.getTitle()));
+    QLabel *imageLabel = new QLabel;
+    QPixmap pixmap;
 
-    QLabel *descLabel = new QLabel("Description: " + book.getDescription());
+    if (!imagePath.isEmpty() && QFileInfo::exists(imagePath))
+    {
+        pixmap.load(imagePath);
+    }
+    else
+    {
+        // Load default image based on type
+        QString defaultPath = getDefaultImagePath(type);
+        if (QFileInfo::exists(defaultPath))
+        {
+            pixmap.load(defaultPath);
+        }
+        else
+        {
+            // If type-specific default doesn't exist, try generic default
+            pixmap.load("app/db/images/default.png");
+        }
+    }
+
+    // Scale the image while maintaining aspect ratio
+    pixmap = pixmap.scaledToWidth(IMAGE_MAX_WIDTH, Qt::SmoothTransformation);
+    imageLabel->setPixmap(pixmap);
+    imageLabel->setAlignment(Qt::AlignCenter);
+    imageLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    imageLabel->setMinimumWidth(200); // Minimum width for the image
+
+    imageLayout->addWidget(imageLabel);
+    imageLayout->addStretch(); // Push image to the top
+
+    return imageWidget;
+}
+
+QWidget *ItemShowVisitor::createInfoWidget(const QString &type, const QString &title,
+                                           const QString &description, const QString &year,
+                                           const QString &review, const QString &comment,
+                                           const QString &extraInfo1, const QString &extraInfo2)
+{
+    QWidget *infoWidget = new QWidget;
+    QVBoxLayout *infoLayout = new QVBoxLayout(infoWidget);
+    infoLayout->setContentsMargins(0, 0, 0, 0);
+
+    // Add all the information
+    infoLayout->addWidget(new QLabel(type));
+    infoLayout->addWidget(new QLabel("Title: " + title));
+
+    QLabel *descLabel = new QLabel("Description: " + description);
     descLabel->setWordWrap(true);
-    layout->addWidget(descLabel);
+    infoLayout->addWidget(descLabel);
 
-    layout->addWidget(new QLabel("Author: " + book.getAuthor()));
-    layout->addWidget(new QLabel("Year: " + QString::number(book.getYear())));
-    layout->addWidget(new QLabel("Review: " + QString::number(book.getReview())));
+    infoLayout->addWidget(new QLabel(extraInfo1));
+    if (!extraInfo2.isEmpty())
+    {
+        infoLayout->addWidget(new QLabel(extraInfo2));
+    }
 
-    QLabel *commentLabel = new QLabel("Comment: " + book.getComment());
+    infoLayout->addWidget(new QLabel("Year: " + year));
+    infoLayout->addWidget(new QLabel("Review: " + review));
+
+    QLabel *commentLabel = new QLabel("Comment: " + comment);
     commentLabel->setWordWrap(true);
-    layout->addWidget(commentLabel);
+    infoLayout->addWidget(commentLabel);
 
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    // Add buttons at the bottom
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    QPushButton *editButton = new QPushButton("Edit " + type);
+    QPushButton *deleteButton = new QPushButton("Delete " + type);
 
-    QPushButton *editButton = new QPushButton("Edit Book");
-    horizontalLayout->addWidget(editButton);
+    buttonLayout->addWidget(editButton);
+    buttonLayout->addWidget(deleteButton);
 
-    QPushButton *deleteButton = new QPushButton("Delete Book");
-    horizontalLayout->addWidget(deleteButton);
+    infoLayout->addLayout(buttonLayout);
+    infoLayout->addStretch(); // Push all content to the top
 
-    layout->addLayout(horizontalLayout);
-
-    itemId = book.getId();
+    // Connect buttons
     connect(deleteButton, &QPushButton::clicked, this, [this]()
             { emit deleteItemRequested(itemId); });
     connect(editButton, &QPushButton::clicked, this, [this]()
             { emit editItemRequested(itemId); });
 
+    return infoWidget;
+}
+
+void ItemShowVisitor::visit(Book &book)
+{
+    clearWidget();
+
+    QWidget *result = new QFrame;
+    QVBoxLayout *mainLayout = new QVBoxLayout(result);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+
+    // Create image widget
+    QWidget *imageWidget = createImageWidget(book.getImagePath(), "Book");
+    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+    // Create info widget
+    QWidget *infoWidget = createInfoWidget("📚 Book", book.getTitle(), book.getDescription(),
+                                           QString::number(book.getYear()), QString::number(book.getReview()),
+                                           book.getComment(), "Author: " + book.getAuthor());
+    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    // Add widgets to layout
+    mainLayout->addWidget(imageWidget);
+    mainLayout->addWidget(infoWidget);
+
+    itemId = book.getId();
     widget = result;
 }
 
 void ItemShowVisitor::visit(Movie &movie)
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    clearWidget();
 
     QWidget *result = new QFrame;
-    QVBoxLayout *layout = new QVBoxLayout(result);
+    QVBoxLayout *mainLayout = new QVBoxLayout(result);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    layout->addWidget(new QLabel("🎬 Movie"));
-    layout->addWidget(new QLabel("Title: " + movie.getTitle()));
+    // Create image widget
+    QWidget *imageWidget = createImageWidget(movie.getImagePath(), "Movie");
+    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    QLabel *descLabel = new QLabel("Description: " + movie.getDescription());
-    descLabel->setWordWrap(true);
-    layout->addWidget(descLabel);
+    // Create info widget
+    QWidget *infoWidget = createInfoWidget("🎬 Movie", movie.getTitle(), movie.getDescription(),
+                                           QString::number(movie.getYear()), QString::number(movie.getReview()),
+                                           movie.getComment(), "Director: " + movie.getDirector());
+    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    layout->addWidget(new QLabel("Director: " + movie.getDirector()));
-    layout->addWidget(new QLabel("Year: " + QString::number(movie.getYear())));
-    layout->addWidget(new QLabel("Review: " + QString::number(movie.getReview())));
-
-    QLabel *commentLabel = new QLabel("Comment: " + movie.getComment());
-    commentLabel->setWordWrap(true);
-    layout->addWidget(commentLabel);
-
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
-
-    QPushButton *editButton = new QPushButton("Edit Movie");
-    horizontalLayout->addWidget(editButton);
-
-    QPushButton *deleteButton = new QPushButton("Delete Movie");
-    horizontalLayout->addWidget(deleteButton);
-
-    layout->addLayout(horizontalLayout);
+    // Add widgets to layout
+    mainLayout->addWidget(imageWidget);
+    mainLayout->addWidget(infoWidget);
 
     itemId = movie.getId();
-    connect(deleteButton, &QPushButton::clicked, this, [this]()
-            { emit deleteItemRequested(itemId); });
-    connect(editButton, &QPushButton::clicked, this, [this]()
-            { emit editItemRequested(itemId); });
-
     widget = result;
 }
 
 void ItemShowVisitor::visit(Article &article)
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    clearWidget();
 
     QWidget *result = new QFrame;
-    QVBoxLayout *layout = new QVBoxLayout(result);
+    QVBoxLayout *mainLayout = new QVBoxLayout(result);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    layout->addWidget(new QLabel("📝 Article"));
-    layout->addWidget(new QLabel("Title: " + article.getTitle()));
+    // Create image widget
+    QWidget *imageWidget = createImageWidget(article.getImagePath(), "Article");
+    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    QLabel *descLabel = new QLabel("Description: " + article.getDescription());
-    descLabel->setWordWrap(true);
-    layout->addWidget(descLabel);
+    // Create info widget
+    QWidget *infoWidget = createInfoWidget("📝 Article", article.getTitle(), article.getDescription(),
+                                           QString::number(article.getYear()), QString::number(article.getReview()),
+                                           article.getComment(), "Author: " + article.getAuthor(),
+                                           "Link: " + article.getLink());
+    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    layout->addWidget(new QLabel("Author: " + article.getAuthor()));
-
-    QLabel *linkLabel = new QLabel("Link: " + article.getLink());
-    linkLabel->setWordWrap(true);
-    layout->addWidget(linkLabel);
-
-    layout->addWidget(new QLabel("Year: " + QString::number(article.getYear())));
-    layout->addWidget(new QLabel("Review: " + QString::number(article.getReview())));
-
-    QLabel *commentLabel = new QLabel("Comment: " + article.getComment());
-    commentLabel->setWordWrap(true);
-    layout->addWidget(commentLabel);
-
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
-
-    QPushButton *editButton = new QPushButton("Edit Article");
-    horizontalLayout->addWidget(editButton);
-
-    QPushButton *deleteButton = new QPushButton("Delete Article");
-    horizontalLayout->addWidget(deleteButton);
-
-    layout->addLayout(horizontalLayout);
+    // Add widgets to layout
+    mainLayout->addWidget(imageWidget);
+    mainLayout->addWidget(infoWidget);
 
     itemId = article.getId();
-    connect(deleteButton, &QPushButton::clicked, this, [this]()
-            { emit deleteItemRequested(itemId); });
-    connect(editButton, &QPushButton::clicked, this, [this]()
-            { emit editItemRequested(itemId); });
-
     widget = result;
 }

@@ -4,7 +4,7 @@
         "comment": "still have to read this article tbh",
         "description": "The vast majority of web applications should start life as a Majestic Monolith: A single codebase that does everything the application needs to do. ",
         "id": "{670e5fc2-cda2-4403-80a7-f6f305bb9d37}",
-        "imagePath": "",
+        "imagePath": "app/db/images/{670e5fc2-cda2-4403-80a7-f6f305bb9d37}.png",
         "link": "https://signalvnoise.com/svn3/the-majestic-monolith-can-become-the-citadel/",
         "review": 4,
         "title": "The Majestic Monolith can become The Citadel",

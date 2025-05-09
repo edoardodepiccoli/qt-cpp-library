@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QUuid>
 #include <QObject>
+#include <QLabel>
 
 class ItemShowVisitor : public QObject, public Visitor
 {
@@ -31,8 +32,15 @@ signals:
 
 private:
     void clearWidget();
+    QWidget *createImageWidget(const QString &imagePath, const QString &type);
+    QWidget *createInfoWidget(const QString &type, const QString &title, const QString &description,
+                              const QString &year, const QString &review, const QString &comment,
+                              const QString &extraInfo1, const QString &extraInfo2 = QString());
+    QString getDefaultImagePath(const QString &type) const;
+
     QWidget *widget = nullptr;
     QUuid itemId;
+    static const int IMAGE_MAX_WIDTH = 300; // Maximum width for the image
 };
 
 #endif // ITEMSHOWVISITOR_H
