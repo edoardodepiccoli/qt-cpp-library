@@ -68,7 +68,7 @@ When editing item, since Library class does not have anything, simply do this:
 - When clicking update, find a way to update its fields
 - Probably, you should send a Item * to the mainwindow, then call the update method in the Library with it (do all the type checking stuff in it with some sort of cast)
 ```
-- [ ] Create a working search bar at the top of the index view.
+- [ ] Create a working search bar (with cool fuzzy finding like that neovim plugin) at the top of the index view.
 ```
 Make it use a method of the Library for sure. Keep things simple, just create the method that takes a string and returns the results...
 Be really careful with pointer ownership tho. This is the tricky part about returning results.
