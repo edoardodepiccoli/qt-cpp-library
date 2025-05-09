@@ -1,2 +1,3 @@
 build/
 app/db/data.json
+app/db/images/*
