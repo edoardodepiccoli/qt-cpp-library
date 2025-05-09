@@ -357,8 +357,6 @@ std::vector<Item *> Library::searchItems(const QString &query) const
         if (!item)
             continue; // Skip null items
 
-        bool found = false;
-
         // Search in common fields
         if (item->getTitle().toLower().contains(lowerQuery) ||
             item->getDescription().toLower().contains(lowerQuery) ||
