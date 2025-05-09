@@ -155,13 +155,13 @@
         "year": 1983
     },
     {
-        "comment": "Gave me chills🥶",
-        "description": "Movie about space and the future of humanity",
-        "director": "Christopher Nolan",
-        "id": "{3d66ae58-a09b-4f5a-a23d-e27cd12fc7b8}",
-        "review": 5,
-        "title": "Interstellar",
+        "comment": "great movie, made me think about the purpose of life\t",
+        "description": "movie about a very rich young man who gets killed in the end :(",
+        "director": "Baz Luhrmann",
+        "id": "{531e6271-81f3-4adb-8bce-2da8a6153b5f}",
+        "review": 4,
+        "title": "the great gatsby",
         "type": "movie",
-        "year": 2017
+        "year": 2010
     }
 ]

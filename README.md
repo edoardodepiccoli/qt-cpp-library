@@ -11,6 +11,23 @@ This application serves as a practical implementation of a library management sy
 - MVC (Model-View-Controller) architecture
 - Visitor design pattern implementation
 
+## 🧪 App Demo
+
+### Search And Index
+[](demo-gifs/search%20and%20index%20demo.gif)
+
+### Create New Items
+[](demo-gifs/new%20and%20create%20demo.gif)
+
+### Edit And Update Items
+[](demo-gifs/edit%20and%20update%20demo.gif)
+
+### Delete Items
+[](demo-gifs/delete%20demo.gif)
+
+### Resizing Interface
+[](demo-gifs/resizing%20demo.gif)
+
 ## 🚀 Getting Started
 
 ### 🔨 Building the Application
