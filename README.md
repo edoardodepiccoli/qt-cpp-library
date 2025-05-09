@@ -14,19 +14,19 @@ This application serves as a practical implementation of a library management sy
 ## 🧪 App Demo
 
 ### Search And Index
-[](demo-gifs/search%20and%20index%20demo.gif)
+![Search and Index Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/search%20and%20index%20demo.gif)
 
 ### Create New Items
-[](demo-gifs/new%20and%20create%20demo.gif)
+![Create New Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/new%20and%20create%20demo.gif)
 
 ### Edit And Update Items
-[](demo-gifs/edit%20and%20update%20demo.gif)
+![Edit and Update Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/edit%20and%20update%20demo.gif)
 
 ### Delete Items
-[](demo-gifs/delete%20demo.gif)
+![Delete Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/delete%20demo.gif)
 
 ### Resizing Interface
-[](demo-gifs/resizing%20demo.gif)
+![Resizing Interface Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/resizing%20demo.gif)
 
 ## 🚀 Getting Started
 
