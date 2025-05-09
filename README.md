@@ -1,8 +1,8 @@
-# Qt Library Management System
+# 📚 Qt Library Management System
 
 A comprehensive C++ library management application built with Qt, demonstrating advanced object-oriented programming concepts and design patterns.
 
-## Overview
+## 🎯 Overview
 
 This application serves as a practical implementation of a library management system, showcasing:
 - Object-oriented programming principles
@@ -11,22 +11,22 @@ This application serves as a practical implementation of a library management sy
 - MVC (Model-View-Controller) architecture
 - Visitor design pattern implementation
 
-## Getting Started
+## 🚀 Getting Started
 
-### Building the Application
+### 🔨 Building the Application
 
 1. Run the build script:
 ```bash
 ./build.sh
 ```
 
-### Running the Application
+### 💻 Running the Application
 
 The application can be run in two modes:
 
 1. **GUI Mode** (default):
 ```bash
-./build/div/.../os/qt-library
+./build/bin/.../qt-library
 ```
 
 2. **CLI Mode** (for testing backend business logic):
@@ -36,9 +36,9 @@ The application can be run in two modes:
 
 The CLI mode provides a simple command-line interface to test the core functionality without the graphical user interface.
 
-## Architecture
+## 🏗️ Architecture
 
-### Core Components
+### 🧩 Core Components
 
 The application follows a structured architecture with clear separation of concerns:
 
@@ -49,7 +49,7 @@ The application follows a structured architecture with clear separation of conce
 - **CLI**: Command-line interface components
 - **Database**: Data persistence layer
 
-### Navigation Flow
+### 🧭 Navigation Flow
 
 The application's navigation flow is inspired by RESTful patterns commonly used in web applications (like Ruby On Rails web apps), adapted for a desktop GUI context:
 
@@ -65,7 +65,7 @@ The application's navigation flow is inspired by RESTful patterns commonly used 
 
 This pattern provides a clear and intuitive way to navigate between different views while maintaining a consistent user experience.
 
-## Features
+## ✨ Features
 
 - Complete CRUD operations for library items
 - Dynamic form generation based on item type
@@ -73,20 +73,19 @@ This pattern provides a clear and intuitive way to navigate between different vi
 - Type-safe item management
 - Modern Qt-based user interface
 
-## Development Status
+## 📊 Development Status
 
-### Completed Features
-- ✅ New item creation with dynamic form generation
-- ✅ Item viewing and detailed information display
-- ✅ Item editing functionality
-- ✅ Delete operations
-- ✅ Search capabilities with fuzzy-like matching
+### ✅ Completed Features
+- New item creation with dynamic form generation
+- Item viewing and detailed information display
+- Item editing functionality
+- Delete operations
+- Search capabilities with fuzzy-like matching
 
-### Planned Improvements
-- 🔄 Memory management optimization using smart pointers
-- 🔄 Better UI styling
+### 🔄 Planned Improvements
+- Better UI styling
 
-## Technical Details
+## 🔧 Technical Details
 
 The application leverages several key design patterns:
 - Visitor pattern for type-specific operations
