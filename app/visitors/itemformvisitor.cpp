@@ -18,6 +18,13 @@ ItemFormVisitor::ItemFormVisitor(QObject *parent, Item *item)
     isEditing = item != nullptr;
 }
 
+ItemFormVisitor::~ItemFormVisitor()
+{
+    // The form widget and its children will be deleted by Qt's parent-child mechanism
+    // We just need to ensure our pointer is nullified
+    form = nullptr;
+}
+
 void ItemFormVisitor::addImageUploadSection(QVBoxLayout *layout)
 {
     QLabel *imageLabel = new QLabel("Image:");

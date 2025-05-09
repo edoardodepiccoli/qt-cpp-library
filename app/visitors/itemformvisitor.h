@@ -20,7 +20,7 @@ class ItemFormVisitor : public QObject, public Visitor
 
 public:
     explicit ItemFormVisitor(QObject *parent = nullptr, Item *item = nullptr);
-    ~ItemFormVisitor() override = default;
+    ~ItemFormVisitor() override;
     QWidget *getResult() const { return form; }
     QString getCurrentImagePath() const { return currentImagePath; }
 
