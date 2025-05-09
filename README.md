@@ -57,15 +57,15 @@ The application follows a structured architecture with clear separation of conce
 
 The application's navigation flow is inspired by RESTful patterns commonly used in web applications (like Ruby On Rails web apps), adapted for a desktop GUI context:
 
-| Action         | View         | View Transition             |
-| -------------- | ------------ | --------------------------- |
-| List all items | IndexView    | → IndexView                 |
-| Show item      | ShowItemView | IndexView → ShowItemView    |
-| New item form  | NewItemView  | IndexView → NewItemView     |
-| Edit item form | EditItemView | ShowItemView → EditItemView |
-| Create item    | NewItemView  | NewItemView → IndexView     |
-| Update item    | EditItemView | EditItemView → ShowItemView |
-| Delete item    | ShowItemView | ShowItemView → IndexView    |
+| Action         | View         | View Transition              |
+| -------------- | ------------ | ---------------------------- |
+| List all items | IndexView    | → IndexView                  |
+| Show item      | ShowItemView | IndexView → ShowItemView     |
+| New item form  | NewItemView  | IndexView → NewItemView      |
+| Edit item form | EditItemView | ShowItemView → EditItemView  |
+| Create item    | NewItemView  | NewItemView → IndexView      |
+| Update item    | EditItemView | EditItemView → IndexItemView |
+| Delete item    | ShowItemView | ShowItemView → IndexView     |
 
 This pattern provides a clear and intuitive way to navigate between different views while maintaining a consistent user experience.
 
