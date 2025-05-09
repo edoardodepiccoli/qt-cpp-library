@@ -7,9 +7,6 @@ INCLUDEPATH += app
 SOURCES += $$files(app/*.cpp, true)
 HEADERS += $$files(app/*.h, true)
 
-# Main file at project root
-# SOURCES += main.cpp
-
 # Build output organization
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
