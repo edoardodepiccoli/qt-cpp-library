@@ -34,5 +34,8 @@ private slots:
 
 private:
     QStackedWidget *stackedWidget;
+
+    // These two go hand in hand, maybe they are too coupled together but for now it's fine
     std::unique_ptr<Library> libraryModel;
+    QString currentSearchQuery;
 };

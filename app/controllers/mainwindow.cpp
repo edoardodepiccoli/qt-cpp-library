@@ -59,7 +59,7 @@ void MainWindow::setIndexView()
 
     // Initialize the IndexView
     IndexView *indexView = new IndexView(this);
-    indexView->populateFromLibrary(libraryModel.get());
+    indexView->populateFromLibrary(libraryModel.get(), currentSearchQuery);
 
     // Connect signals and slots
     connect(indexView, &IndexView::itemShowRequested, this, &MainWindow::handleShowItemRequest);
