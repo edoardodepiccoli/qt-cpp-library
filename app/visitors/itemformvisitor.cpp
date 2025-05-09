@@ -41,6 +41,7 @@ void ItemFormVisitor::onImageButtonClicked()
     {
         currentImagePath = filePath;
         imagePathLabel->setText("Selected: " + filePath);
+        emit imagePathChanged(filePath);
     }
 }
 
@@ -293,6 +294,12 @@ Item *ItemFormVisitor::createItemFromForm() const
     }
     }
 
+    // Set the image path on the new item if it exists
+    if (newItem && !currentImagePath.isEmpty())
+    {
+        newItem->setImagePath(currentImagePath);
+    }
+
     return newItem;
 }
 
@@ -318,15 +325,18 @@ void ItemFormVisitor::onUpdateButtonClicked()
     if (Item *newItem = createItemFromForm())
     {
         newItem->setId(item->getId()); // Preserve the original ID
+
+        // If we have a current image path, set it on the new item
         if (!currentImagePath.isEmpty())
         {
-            // The image will be set after the item is updated
-            emit updateItemRequested(newItem);
-            // The MainWindow will handle setting the image after the item is updated
+            newItem->setImagePath(currentImagePath);
         }
         else
         {
-            emit updateItemRequested(newItem);
+            // If no new image was selected, preserve the old image path
+            newItem->setImagePath(item->getImagePath());
         }
+
+        emit updateItemRequested(newItem);
     }
 }

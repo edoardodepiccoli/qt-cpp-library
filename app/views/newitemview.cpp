@@ -11,7 +11,9 @@ NewItemView::NewItemView(QWidget *parent)
     : QWidget(parent),
       mainLayout(nullptr),
       typeComboBox(nullptr),
-      currentForm(nullptr)
+      currentForm(nullptr),
+      currentImagePath(QString()),
+      currentFormVisitor(nullptr)
 {
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
@@ -50,39 +52,62 @@ void NewItemView::setUpForm(const QString &type)
         currentForm = nullptr;
     }
 
-    ItemFormVisitor *visitor = new ItemFormVisitor(this);
+    // Delete the old visitor if it exists
+    if (currentFormVisitor)
+    {
+        delete currentFormVisitor;
+        currentFormVisitor = nullptr;
+    }
+
+    currentFormVisitor = new ItemFormVisitor(this);
 
     if (type == "book")
     {
         Book *book = new Book();
-        visitor->visit(*book);
+        currentFormVisitor->visit(*book);
         delete book; // Clean up the temporary book
     }
     else if (type == "movie")
     {
         Movie *movie = new Movie();
-        visitor->visit(*movie);
+        currentFormVisitor->visit(*movie);
         delete movie; // Clean up the temporary movie
     }
     else if (type == "article")
     {
         Article *article = new Article();
-        visitor->visit(*article);
+        currentFormVisitor->visit(*article);
         delete article; // Clean up the temporary article
     }
 
-    QWidget *form = visitor->getResult();
+    QWidget *form = currentFormVisitor->getResult();
     if (form)
     {
+        // If we have a current image path, update the form's image path
+        if (!currentImagePath.isEmpty())
+        {
+            if (auto *imagePathLabel = form->findChild<QLabel *>())
+            {
+                imagePathLabel->setText("Selected: " + currentImagePath);
+            }
+            currentFormVisitor->setCurrentImagePath(currentImagePath);
+        }
+
         mainLayout->addWidget(form);
         currentForm = form;
 
-        connect(visitor, &ItemFormVisitor::createItemRequested,
-                this, &NewItemView::createItemRequested); // Qt should automatically forward the item pointer, I hope
+        // Connect to the form's image selection signal
+        connect(currentFormVisitor, &ItemFormVisitor::imagePathChanged,
+                this, [this](const QString &path)
+                { currentImagePath = path; });
+
+        connect(currentFormVisitor, &ItemFormVisitor::createItemRequested,
+                this, &NewItemView::createItemRequested);
     }
     else
     {
-        delete visitor;
+        delete currentFormVisitor;
+        currentFormVisitor = nullptr;
     }
 }
 

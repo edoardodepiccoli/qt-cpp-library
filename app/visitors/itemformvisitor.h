@@ -29,9 +29,12 @@ public:
     void visit(Movie &movie) override;
     void visit(Article &article) override;
 
+    void setCurrentImagePath(const QString &path) { currentImagePath = path; }
+
 signals:
     void createItemRequested(Item *item);
     void updateItemRequested(Item *item);
+    void imagePathChanged(const QString &path);
 
 private slots:
     void onCreateButtonClicked();

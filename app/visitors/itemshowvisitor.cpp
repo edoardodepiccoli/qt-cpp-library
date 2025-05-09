@@ -9,8 +9,6 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QFileInfo>
-#include <QStackedLayout>
-#include <QSizePolicy>
 
 ItemShowVisitor::ItemShowVisitor(QObject *parent)
     : QObject(parent), widget(nullptr)
@@ -52,7 +50,6 @@ QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QStr
 {
     QWidget *imageWidget = new QWidget;
     QVBoxLayout *imageLayout = new QVBoxLayout(imageWidget);
-    imageLayout->setContentsMargins(0, 0, 0, 0);
 
     QLabel *imageLabel = new QLabel;
     QPixmap pixmap;
@@ -80,8 +77,6 @@ QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QStr
     pixmap = pixmap.scaledToWidth(IMAGE_MAX_WIDTH, Qt::SmoothTransformation);
     imageLabel->setPixmap(pixmap);
     imageLabel->setAlignment(Qt::AlignCenter);
-    imageLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    imageLabel->setMinimumWidth(200); // Minimum width for the image
 
     imageLayout->addWidget(imageLabel);
     imageLayout->addStretch(); // Push image to the top
@@ -96,7 +91,6 @@ QWidget *ItemShowVisitor::createInfoWidget(const QString &type, const QString &t
 {
     QWidget *infoWidget = new QWidget;
     QVBoxLayout *infoLayout = new QVBoxLayout(infoWidget);
-    infoLayout->setContentsMargins(0, 0, 0, 0);
 
     // Add all the information
     infoLayout->addWidget(new QLabel(type));
@@ -144,21 +138,16 @@ void ItemShowVisitor::visit(Book &book)
     clearWidget();
 
     QWidget *result = new QFrame;
-    QVBoxLayout *mainLayout = new QVBoxLayout(result);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    QHBoxLayout *mainLayout = new QHBoxLayout(result);
 
     // Create image widget
     QWidget *imageWidget = createImageWidget(book.getImagePath(), "Book");
-    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    mainLayout->addWidget(imageWidget);
 
     // Create info widget
     QWidget *infoWidget = createInfoWidget("📚 Book", book.getTitle(), book.getDescription(),
                                            QString::number(book.getYear()), QString::number(book.getReview()),
                                            book.getComment(), "Author: " + book.getAuthor());
-    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
-    // Add widgets to layout
-    mainLayout->addWidget(imageWidget);
     mainLayout->addWidget(infoWidget);
 
     itemId = book.getId();
@@ -170,21 +159,16 @@ void ItemShowVisitor::visit(Movie &movie)
     clearWidget();
 
     QWidget *result = new QFrame;
-    QVBoxLayout *mainLayout = new QVBoxLayout(result);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    QHBoxLayout *mainLayout = new QHBoxLayout(result);
 
     // Create image widget
     QWidget *imageWidget = createImageWidget(movie.getImagePath(), "Movie");
-    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    mainLayout->addWidget(imageWidget);
 
     // Create info widget
     QWidget *infoWidget = createInfoWidget("🎬 Movie", movie.getTitle(), movie.getDescription(),
                                            QString::number(movie.getYear()), QString::number(movie.getReview()),
                                            movie.getComment(), "Director: " + movie.getDirector());
-    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
-    // Add widgets to layout
-    mainLayout->addWidget(imageWidget);
     mainLayout->addWidget(infoWidget);
 
     itemId = movie.getId();
@@ -196,22 +180,17 @@ void ItemShowVisitor::visit(Article &article)
     clearWidget();
 
     QWidget *result = new QFrame;
-    QVBoxLayout *mainLayout = new QVBoxLayout(result);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    QHBoxLayout *mainLayout = new QHBoxLayout(result);
 
     // Create image widget
     QWidget *imageWidget = createImageWidget(article.getImagePath(), "Article");
-    imageWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    mainLayout->addWidget(imageWidget);
 
     // Create info widget
     QWidget *infoWidget = createInfoWidget("📝 Article", article.getTitle(), article.getDescription(),
                                            QString::number(article.getYear()), QString::number(article.getReview()),
                                            article.getComment(), "Author: " + article.getAuthor(),
                                            "Link: " + article.getLink());
-    infoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
-    // Add widgets to layout
-    mainLayout->addWidget(imageWidget);
     mainLayout->addWidget(infoWidget);
 
     itemId = article.getId();

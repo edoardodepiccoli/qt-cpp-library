@@ -137,9 +137,9 @@ void MainWindow::handleCreateItemRequest(Item *item)
     // Get the form visitor to check for pending image
     if (auto *newItemView = qobject_cast<NewItemView *>(stackedWidget->currentWidget()))
     {
-        if (auto *form = qobject_cast<ItemFormVisitor *>(newItemView->findChild<ItemFormVisitor *>()))
+        if (auto *formVisitor = newItemView->getCurrentFormVisitor())
         {
-            QString imagePath = form->getCurrentImagePath();
+            QString imagePath = formVisitor->getCurrentImagePath();
             if (!imagePath.isEmpty())
             {
                 libraryModel->setItemImage(item->getId(), imagePath);

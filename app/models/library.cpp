@@ -216,7 +216,16 @@ bool Library::loadFromFile()
     QFile file("app/db/data.json");
     if (!file.open(QIODevice::ReadOnly))
     {
-        return false;
+        // If file doesn't exist, create an empty one
+        if (!file.open(QIODevice::WriteOnly))
+        {
+            return false;
+        }
+        QJsonArray emptyArray;
+        QJsonDocument doc(emptyArray);
+        file.write(doc.toJson());
+        file.close();
+        return true;
     }
 
     QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
