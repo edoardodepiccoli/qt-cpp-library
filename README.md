@@ -13,8 +13,6 @@ This application serves as a practical implementation of a library management sy
 
 ## 🧪 App Demo
 
-Click on the gifs to see them with a better quality
-
 ### Search And Index
 ![Search and Index Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/search%20and%20index%20demo.gif)
 
