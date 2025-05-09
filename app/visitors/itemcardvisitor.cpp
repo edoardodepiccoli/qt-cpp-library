@@ -13,23 +13,21 @@ ItemCardVisitor::ItemCardVisitor(QObject *parent)
 
 ItemCardVisitor::~ItemCardVisitor()
 {
-    clearWidget();
+    // Don't delete the widget here - it's owned by its parent
+    widget = nullptr;
 }
 
 void ItemCardVisitor::clearWidget()
 {
-    if (widget)
-    {
-        delete widget;
-        widget = nullptr;
-    }
+    // Don't delete the widget - it's owned by its parent
+    widget = nullptr;
 }
 
 void ItemCardVisitor::visit(Book &book)
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    clearWidget();
 
-    QWidget *card = new QFrame;
+    QWidget *card = new QFrame(qobject_cast<QWidget *>(parent()));
     QVBoxLayout *layout = new QVBoxLayout(card);
 
     layout->addWidget(new QLabel("📚 Book"));
@@ -53,9 +51,9 @@ void ItemCardVisitor::visit(Book &book)
 
 void ItemCardVisitor::visit(Movie &movie)
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    clearWidget();
 
-    QWidget *card = new QFrame;
+    QWidget *card = new QFrame(qobject_cast<QWidget *>(parent()));
     QVBoxLayout *layout = new QVBoxLayout(card);
 
     layout->addWidget(new QLabel("🎬 Movie"));
@@ -80,9 +78,9 @@ void ItemCardVisitor::visit(Movie &movie)
 
 void ItemCardVisitor::visit(Article &article)
 {
-    clearWidget(); // Clear any existing widget before creating a new one
+    clearWidget();
 
-    QWidget *card = new QFrame;
+    QWidget *card = new QFrame(qobject_cast<QWidget *>(parent()));
     QVBoxLayout *layout = new QVBoxLayout(card);
 
     layout->addWidget(new QLabel("📝 Article"));
