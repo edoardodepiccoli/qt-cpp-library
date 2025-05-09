@@ -192,6 +192,17 @@ void Library::accept(Visitor &visitor)
 
 std::vector<Item *> Library::searchItems(const QString &query) const
 {
+    // Default to showing all items if query is empty, no logic in the mainwindow = we are really happy
+    if (query.isEmpty())
+    {
+        std::vector<Item *> results;
+        for (const auto &item : items)
+        {
+            results.push_back(item.get());
+        }
+        return results;
+    }
+
     std::vector<Item *> results;
     QString lowerQuery = query.toLower();
 
