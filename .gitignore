@@ -1,2 +1,2 @@
-Makefile
 build/
+app/db/data.json
