@@ -35,9 +35,18 @@ void ItemShowVisitor::visit(Book &book)
 
     layout->addWidget(new QLabel("📚 Book"));
     layout->addWidget(new QLabel("Title: " + book.getTitle()));
+
+    QLabel *descLabel = new QLabel("Description: " + book.getDescription());
+    descLabel->setWordWrap(true);
+    layout->addWidget(descLabel);
+
     layout->addWidget(new QLabel("Author: " + book.getAuthor()));
     layout->addWidget(new QLabel("Year: " + QString::number(book.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(book.getReview())));
+
+    QLabel *commentLabel = new QLabel("Comment: " + book.getComment());
+    commentLabel->setWordWrap(true);
+    layout->addWidget(commentLabel);
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
 
@@ -67,9 +76,18 @@ void ItemShowVisitor::visit(Movie &movie)
 
     layout->addWidget(new QLabel("🎬 Movie"));
     layout->addWidget(new QLabel("Title: " + movie.getTitle()));
+
+    QLabel *descLabel = new QLabel("Description: " + movie.getDescription());
+    descLabel->setWordWrap(true);
+    layout->addWidget(descLabel);
+
     layout->addWidget(new QLabel("Director: " + movie.getDirector()));
     layout->addWidget(new QLabel("Year: " + QString::number(movie.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(movie.getReview())));
+
+    QLabel *commentLabel = new QLabel("Comment: " + movie.getComment());
+    commentLabel->setWordWrap(true);
+    layout->addWidget(commentLabel);
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
 
@@ -99,10 +117,23 @@ void ItemShowVisitor::visit(Article &article)
 
     layout->addWidget(new QLabel("📝 Article"));
     layout->addWidget(new QLabel("Title: " + article.getTitle()));
-    layout->addWidget(new QLabel("Link: " + article.getLink()));
+
+    QLabel *descLabel = new QLabel("Description: " + article.getDescription());
+    descLabel->setWordWrap(true);
+    layout->addWidget(descLabel);
+
     layout->addWidget(new QLabel("Author: " + article.getAuthor()));
+
+    QLabel *linkLabel = new QLabel("Link: " + article.getLink());
+    linkLabel->setWordWrap(true);
+    layout->addWidget(linkLabel);
+
     layout->addWidget(new QLabel("Year: " + QString::number(article.getYear())));
     layout->addWidget(new QLabel("Review: " + QString::number(article.getReview())));
+
+    QLabel *commentLabel = new QLabel("Comment: " + article.getComment());
+    commentLabel->setWordWrap(true);
+    layout->addWidget(commentLabel);
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
 
