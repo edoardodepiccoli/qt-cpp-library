@@ -102,6 +102,28 @@ This pattern provides a clear and intuitive way to navigate between different vi
 ### 🔄 Planned Improvements
 - Better UI styling
 
+## 🚨 Project Feedback and Action Steps
+
+- [ ] Fix segmentation fault runtime error when clicking on "View Item", then "New Item"
+
+This error is currently not present on MacOS, only on Ubuntu.
+
+I am currently trying to fix the error, still on my MacOS ARM dev setup.
+
+Here is what I think is happening:
+The error was occurring because on Ubuntu (and potentially other Linux distributions), uninitialized pointers can have different default values compared to macOS. By explicitly initializing all pointers to nullptr, we ensure (I hope) consistent behavior across all platforms.
+
+The segmentation fault is/was (probably) happening because:
+- currentForm was uninitialized
+- When setUpForm was called, it tried to check if (currentForm) which could evaluate to true with garbage memory. By looking at the stack trace provided by valgrind, the problem seems exactly that...
+- This led to trying to remove and delete an invalid widget pointer
+
+The VM to test the project for submission is a .ova VM. I will try to check out [this link](https://github.com/utmapp/UTM/discussions/2521) to find out how to emulate it on an ARM-based machine (my M1 MacBook Air) 🤞🏻 (Edit: it didn't work)
+- [ ] Improve ShowItemView UI
+- [ ] Add option to Upload an Image for each item
+
+This last point is trickier. My idea is to implement it by making it so the user can select an image from their pc in png, jpg or jpeg format. The app then copies it to the asset folder and it sets the item imagePath to the imagePath in the asset folder. This should be taken into account also when performing all other CRUD operations. Do this as soon as the rest of the application is working well.
+
 ## 🔧 Technical Details
 
 The application leverages several key design patterns:

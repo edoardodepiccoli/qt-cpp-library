@@ -18,7 +18,7 @@ signals:
 private:
     QVBoxLayout *mainLayout;
     QComboBox *typeComboBox;
-    QWidget *currentForm;
+    QWidget *currentForm = nullptr;
 
 private slots:
     void onTypeChanged(const QString &type);

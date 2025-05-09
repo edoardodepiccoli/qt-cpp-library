@@ -8,7 +8,10 @@
 #include <QDebug>
 
 NewItemView::NewItemView(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mainLayout(nullptr),
+      typeComboBox(nullptr),
+      currentForm(nullptr)
 {
     QScrollArea *scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true);
