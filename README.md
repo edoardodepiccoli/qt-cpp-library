@@ -13,20 +13,7 @@ This application serves as a practical implementation of a library management sy
 
 ## 🧪 App Demo
 
-### Search And Index
-![Search and Index Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/search%20and%20index%20demo.gif)
-
-### Create New Items
-![Create New Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/new%20and%20create%20demo.gif)
-
-### Edit And Update Items
-![Edit and Update Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/edit%20and%20update%20demo.gif)
-
-### Delete Items
-![Delete Items Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/delete%20demo.gif)
-
-### Resizing Interface
-![Resizing Interface Demo](https://github.com/edoardodepiccoli/qt-cpp-library/blob/main/demo-gifs/resizing%20demo.gif)
+[Demo Video](https://youtu.be/ywMM5f5HGdE)
 
 ## 🚀 Getting Started
 
@@ -98,33 +85,6 @@ This pattern provides a clear and intuitive way to navigate between different vi
 - Item editing functionality
 - Delete operations
 - Search capabilities with fuzzy-like matching
-
-### 🔄 Planned Improvements
-- Better UI styling
-
-## 🚨 Project Feedback and Action Steps
-
-- [ ] Fix segmentation fault runtime error when clicking on "View Item", then "New Item"
-
-This error is currently not present on MacOS, only on Ubuntu.
-
-I am currently trying to fix the error, still on my MacOS ARM dev setup.
-
-Here is what I think is happening:
-The error was occurring because on Ubuntu (and potentially other Linux distributions), uninitialized pointers can have different default values compared to macOS. By explicitly initializing all pointers to nullptr, we ensure (I hope) consistent behavior across all platforms.
-
-The segmentation fault is/was (probably) happening because:
-- currentForm was uninitialized
-- When setUpForm was called, it tried to check if (currentForm) which could evaluate to true with garbage memory. By looking at the stack trace provided by valgrind, the problem seems exactly that...
-- This led to trying to remove and delete an invalid widget pointer
-
-The VM to test the project for submission is a .ova VM. I will try to check out [this link](https://github.com/utmapp/UTM/discussions/2521) to find out how to emulate it on an ARM-based machine (my M1 MacBook Air) 🤞🏻 (Edit: it didn't work)
-- [ ] Improve ShowItemView UI
-- [ ] Add option to Upload an Image for each item
-
-This last point is trickier. My idea is to implement it by making it so the user can select an image from their pc in png, jpg or jpeg format. The app then copies it to the asset folder and it sets the item imagePath to the imagePath in the asset folder. This should be taken into account also when performing all other CRUD operations.
-
-I could take the image the user uploads, copy it, prepend it with the id of the item, put it in db/images replacing another potential image with the same id before. On edit, if the image gets changed, then do nothing because in the step before you simply replace images with the same id, same here. On delete, check if there is an image with the id and simply delete it.
 
 ## 🔧 Technical Details
 
