@@ -21,6 +21,7 @@ public:
     int getYear() const { return year; }
     int getReview() const { return review; }
     QString getComment() const { return comment; }
+    QString getImagePath() const { return imagePath; }
 
     void setTitle(const QString &t) { title = t; }
     void setDescription(const QString &d) { description = d; }
@@ -33,6 +34,7 @@ public:
         }
     }
     void setComment(const QString &c) { comment = c; }
+    void setImagePath(const QString &path) { imagePath = path; }
 
     virtual void accept(Visitor &visitor) = 0;
 
@@ -43,6 +45,7 @@ protected:
     int year;
     int review;
     QString comment;
+    QString imagePath; // Path to the item's image, relative to the db/images directory
 };
 
 #endif // ITEM_H

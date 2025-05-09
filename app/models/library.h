@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include <QUuid>
+#include <QString>
+#include <QTextStream>
 #include "item.h"
 #include "book.h"
 #include "movie.h"
@@ -30,9 +32,16 @@ public:
 
     void accept(Visitor &visitor);
 
+    // Image management methods
+    QString setItemImage(const QUuid &id, const QString &sourceImagePath);
+    QString getDefaultImagePath(const Item *item) const;
+    void removeItemImage(const QUuid &id);
+
 private:
     std::vector<std::unique_ptr<Item>> items;
-    // Removed the lookup map because I thought it was cool but it was completely unnecessary (duh)
+    QString copyImageToDb(const QString &sourcePath, const QUuid &itemId);
+    void ensureImagesDirectoryExists();
+    QTextStream out{stdout};
 };
 
 #endif // LIBRARY_H

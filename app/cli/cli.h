@@ -23,6 +23,7 @@ private:
 
     QString readInput(const QString &prompt);
     std::unique_ptr<Item> createItem(const QString &type);
+    QString handleImageInput();
 
     Library library;
     QTextStream in;

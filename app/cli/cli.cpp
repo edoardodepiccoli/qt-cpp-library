@@ -1,6 +1,7 @@
 #include "cli.h"
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFileInfo>
 #include "../visitors/debugvisitor.h"
 
 CLI::CLI(QObject *parent)
@@ -85,7 +86,17 @@ void CLI::addItem()
     auto item = createItem(type);
     if (item)
     {
+        QString imagePath = handleImageInput();
         library.addItem(std::move(item));
+        if (!imagePath.isEmpty())
+        {
+            // Get the last added item's ID
+            Item *addedItem = library.getItem(library.getItemCount() - 1);
+            if (addedItem)
+            {
+                library.setItemImage(addedItem->getId(), imagePath);
+            }
+        }
         out << "Item added successfully!\n";
     }
 }
@@ -120,14 +131,23 @@ void CLI::listItems()
         return;
     }
 
-    DebugVisitor debugVisitor;
-    library.accept(debugVisitor);
+    int index = 1;
+    for (const auto &item : library.getItems())
+    {
+        out << "\nindex: " << index << "\n";
+        out.flush(); // Force output of the index
+        DebugVisitor debugVisitor;
+        item->accept(debugVisitor);
+        out.flush(); // Force output of the item details
+        index++;
+    }
+    out << "\n"; // Add a newline at the end
 }
 
 void CLI::showHelp()
 {
     out << "\nAvailable commands:\n";
-    out << "  add    - Add a new item (book/movie/article)\n";
+    out << "  add    - Add a new item (book/movie/article) with optional image\n";
     out << "  remove - Remove an item by number\n";
     out << "  list   - List all items\n";
     out << "  help   - Show this help message\n";
@@ -145,6 +165,32 @@ QString CLI::readInput(const QString &prompt)
     out << prompt;
     out.flush();
     return in.readLine();
+}
+
+QString CLI::handleImageInput()
+{
+    out << "Enter image path (or press Enter to skip): ";
+    QString imagePath = readInput("Image path: ").trimmed();
+
+    if (imagePath.isEmpty())
+    {
+        return QString();
+    }
+
+    QFileInfo fileInfo(imagePath);
+    if (!fileInfo.exists())
+    {
+        showError("Image file does not exist");
+        return QString();
+    }
+
+    if (!fileInfo.isFile())
+    {
+        showError("Path is not a file");
+        return QString();
+    }
+
+    return imagePath;
 }
 
 std::unique_ptr<Item> CLI::createItem(const QString &type)

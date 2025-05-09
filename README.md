@@ -122,7 +122,9 @@ The VM to test the project for submission is a .ova VM. I will try to check out 
 - [ ] Improve ShowItemView UI
 - [ ] Add option to Upload an Image for each item
 
-This last point is trickier. My idea is to implement it by making it so the user can select an image from their pc in png, jpg or jpeg format. The app then copies it to the asset folder and it sets the item imagePath to the imagePath in the asset folder. This should be taken into account also when performing all other CRUD operations. Do this as soon as the rest of the application is working well.
+This last point is trickier. My idea is to implement it by making it so the user can select an image from their pc in png, jpg or jpeg format. The app then copies it to the asset folder and it sets the item imagePath to the imagePath in the asset folder. This should be taken into account also when performing all other CRUD operations.
+
+I could take the image the user uploads, copy it, prepend it with the id of the item, put it in db/images replacing another potential image with the same id before. On edit, if the image gets changed, then do nothing because in the step before you simply replace images with the same id, same here. On delete, check if there is an image with the id and simply delete it.
 
 ## 🔧 Technical Details
 
