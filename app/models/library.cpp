@@ -208,6 +208,9 @@ std::vector<Item *> Library::searchItems(const QString &query) const
 
     for (const auto &item : items)
     {
+        if (!item)
+            continue; // Skip null items
+
         bool found = false;
 
         // Search in common fields
