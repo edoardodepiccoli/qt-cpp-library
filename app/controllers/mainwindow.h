@@ -8,6 +8,7 @@ class IndexView;
 class ShowItemView;
 class NewItemView;
 class EditItemView;
+class ItemFormVisitor;
 
 class MainWindow : public QMainWindow
 {
@@ -38,4 +39,5 @@ private:
     // These two go hand in hand, maybe they are too coupled together but for now it's fine
     std::unique_ptr<Library> libraryModel;
     QString currentSearchQuery;
+    QString pendingImagePath; // Store the image path temporarily
 };

@@ -11,6 +11,8 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QPushButton>
+#include <QLabel>
 
 class ItemFormVisitor : public QObject, public Visitor
 {
@@ -20,6 +22,7 @@ public:
     explicit ItemFormVisitor(QObject *parent = nullptr, Item *item = nullptr);
     ~ItemFormVisitor() override = default;
     QWidget *getResult() const { return form; }
+    QString getCurrentImagePath() const { return currentImagePath; }
 
     // Keep the parameters to allow future "edit item" functionality
     void visit(Book &book) override;
@@ -33,6 +36,7 @@ signals:
 private slots:
     void onCreateButtonClicked();
     void onUpdateButtonClicked();
+    void onImageButtonClicked();
 
 private:
     enum class FormType
@@ -44,6 +48,7 @@ private:
 
     void populateFormFields(Item *item);
     Item *createItemFromForm() const;
+    void addImageUploadSection(QVBoxLayout *layout);
 
     QWidget *form;
     FormType currentFormType;
@@ -57,6 +62,9 @@ private:
     QLineEdit *authorEdit;
     QLineEdit *directorEdit;
     QLineEdit *linkEdit;
+    QPushButton *imageButton;
+    QLabel *imagePathLabel;
+    QString currentImagePath;
 
     // Currently edited item
     // Set to nullptr if creating a new item

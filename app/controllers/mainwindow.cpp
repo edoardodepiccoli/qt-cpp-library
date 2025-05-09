@@ -3,6 +3,7 @@
 #include "../views/newitemview.h"
 #include "../views/edititemview.h"
 #include "../views/showitemview.h"
+#include "../visitors/itemformvisitor.h"
 
 #include <QToolBar>
 #include <QAction>
@@ -132,6 +133,20 @@ void MainWindow::setShowItemView(Item *item)
 void MainWindow::handleCreateItemRequest(Item *item)
 {
     libraryModel->addItem(std::unique_ptr<Item>(item));
+
+    // Get the form visitor to check for pending image
+    if (auto *newItemView = qobject_cast<NewItemView *>(stackedWidget->currentWidget()))
+    {
+        if (auto *form = qobject_cast<ItemFormVisitor *>(newItemView->findChild<ItemFormVisitor *>()))
+        {
+            QString imagePath = form->getCurrentImagePath();
+            if (!imagePath.isEmpty())
+            {
+                libraryModel->setItemImage(item->getId(), imagePath);
+            }
+        }
+    }
+
     setIndexView();
 }
 
@@ -155,6 +170,19 @@ void MainWindow::handleUpdateItemRequest(Item *item)
 {
     if (libraryModel->updateItem(item->getId(), std::unique_ptr<Item>(item)))
     {
+        // Get the form visitor to check for pending image
+        if (auto *editItemView = qobject_cast<EditItemView *>(stackedWidget->currentWidget()))
+        {
+            if (auto *form = qobject_cast<ItemFormVisitor *>(editItemView->findChild<ItemFormVisitor *>()))
+            {
+                QString imagePath = form->getCurrentImagePath();
+                if (!imagePath.isEmpty())
+                {
+                    libraryModel->setItemImage(item->getId(), imagePath);
+                }
+            }
+        }
+
         setIndexView();
     }
 }

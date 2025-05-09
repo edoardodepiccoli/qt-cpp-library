@@ -1,4 +1,6 @@
 #include "itemformvisitor.h"
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -14,6 +16,32 @@ ItemFormVisitor::ItemFormVisitor(QObject *parent, Item *item)
       directorEdit(nullptr), linkEdit(nullptr), item(item)
 {
     isEditing = item != nullptr;
+}
+
+void ItemFormVisitor::addImageUploadSection(QVBoxLayout *layout)
+{
+    QLabel *imageLabel = new QLabel("Image:");
+    imageButton = new QPushButton("Select Image");
+    imagePathLabel = new QLabel("No image selected");
+    imagePathLabel->setWordWrap(true);
+
+    layout->addWidget(imageLabel);
+    layout->addWidget(imageButton);
+    layout->addWidget(imagePathLabel);
+
+    connect(imageButton, &QPushButton::clicked, this, &ItemFormVisitor::onImageButtonClicked);
+}
+
+void ItemFormVisitor::onImageButtonClicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(nullptr, "Select Image", "",
+                                                    "Image Files (*.png *.jpg *.jpeg *.bmp *.gif)");
+
+    if (!filePath.isEmpty())
+    {
+        currentImagePath = filePath;
+        imagePathLabel->setText("Selected: " + filePath);
+    }
 }
 
 void ItemFormVisitor::visit(Book &book)
@@ -50,6 +78,8 @@ void ItemFormVisitor::visit(Book &book)
     authorEdit = new QLineEdit;
     layout->addWidget(authorLabel);
     layout->addWidget(authorEdit);
+
+    addImageUploadSection(layout);
 
     if (isEditing)
     {
@@ -103,6 +133,8 @@ void ItemFormVisitor::visit(Movie &movie)
     directorEdit = new QLineEdit;
     layout->addWidget(directorLabel);
     layout->addWidget(directorEdit);
+
+    addImageUploadSection(layout);
 
     if (isEditing)
     {
@@ -162,6 +194,8 @@ void ItemFormVisitor::visit(Article &article)
     layout->addWidget(authorLabel);
     layout->addWidget(authorEdit);
 
+    addImageUploadSection(layout);
+
     if (isEditing)
     {
         QPushButton *editButton = new QPushButton("Update Article");
@@ -190,6 +224,14 @@ void ItemFormVisitor::populateFormFields(Item *item)
     yearEdit->setText(QString::number(item->getYear()));
     reviewEdit->setText(QString::number(item->getReview()));
     commentEdit->setText(item->getComment());
+
+    // Set current image path if it exists
+    QString imagePath = item->getImagePath();
+    if (!imagePath.isEmpty())
+    {
+        currentImagePath = imagePath;
+        imagePathLabel->setText("Current: " + imagePath);
+    }
 
     if (auto book = dynamic_cast<Book *>(item))
     {
@@ -258,7 +300,16 @@ void ItemFormVisitor::onCreateButtonClicked()
 {
     if (Item *newItem = createItemFromForm())
     {
-        emit createItemRequested(newItem);
+        if (!currentImagePath.isEmpty())
+        {
+            // The image will be set after the item is created and has an ID
+            emit createItemRequested(newItem);
+            // The MainWindow will handle setting the image after the item is created
+        }
+        else
+        {
+            emit createItemRequested(newItem);
+        }
     }
 }
 
@@ -267,6 +318,15 @@ void ItemFormVisitor::onUpdateButtonClicked()
     if (Item *newItem = createItemFromForm())
     {
         newItem->setId(item->getId()); // Preserve the original ID
-        emit updateItemRequested(newItem);
+        if (!currentImagePath.isEmpty())
+        {
+            // The image will be set after the item is updated
+            emit updateItemRequested(newItem);
+            // The MainWindow will handle setting the image after the item is updated
+        }
+        else
+        {
+            emit updateItemRequested(newItem);
+        }
     }
 }

@@ -201,5 +201,27 @@
         "title": "a",
         "type": "movie",
         "year": 3
+    },
+    {
+        "author": "mario",
+        "comment": "test",
+        "description": "asdasd",
+        "id": "{6653478a-ec8e-4227-bac2-d44c467dec2b}",
+        "imagePath": "",
+        "review": 5,
+        "title": "super mario movie",
+        "type": "book",
+        "year": 5
+    },
+    {
+        "author": "",
+        "comment": "",
+        "description": "",
+        "id": "{2d28600e-1b57-461d-bc94-3f987cd3d26b}",
+        "imagePath": "app/db/images/{2d28600e-1b57-461d-bc94-3f987cd3d26b}.jpg",
+        "review": 3,
+        "title": "mario",
+        "type": "book",
+        "year": 0
     }
 ]
