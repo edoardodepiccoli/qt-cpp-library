@@ -10,6 +10,7 @@
 #include <QUuid>
 #include <QObject>
 #include <QLabel>
+#include <QString>
 
 class ItemShowVisitor : public QObject, public Visitor
 {
@@ -31,16 +32,31 @@ signals:
     void editItemRequested(const QUuid &itemId);
 
 private:
+    struct ItemData
+    {
+        QString type;
+        QString title;
+        QString description;
+        QString year;
+        QString review;
+        QString comment;
+        QString imagePath;
+        QStringList extraInfo;
+    };
+
     void clearWidget();
+    ItemData extractItemData(const Book &book);
+    ItemData extractItemData(const Movie &movie);
+    ItemData extractItemData(const Article &article);
+    QWidget *createItemWidget(const ItemData &data);
     QWidget *createImageWidget(const QString &imagePath, const QString &type);
-    QWidget *createInfoWidget(const QString &type, const QString &title, const QString &description,
-                              const QString &year, const QString &review, const QString &comment,
-                              const QString &extraInfo1, const QString &extraInfo2 = QString());
+    QWidget *createInfoWidget(const ItemData &data);
     QString getDefaultImagePath(const QString &type) const;
+    QPixmap loadImage(const QString &path, const QString &type);
 
     QWidget *widget = nullptr;
     QUuid itemId;
-    static const int IMAGE_MAX_WIDTH = 300; // Maximum width for the image
+    static const int IMAGE_MAX_WIDTH = 300;
 };
 
 #endif // ITEMSHOWVISITOR_H

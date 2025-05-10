@@ -31,19 +31,49 @@ void ItemShowVisitor::clearWidget()
 
 QString ItemShowVisitor::getDefaultImagePath(const QString &type) const
 {
-    if (type.contains("Book"))
+    static const QMap<QString, QString> defaultImages = {
+        {"Book", "app/db/default_book.png"},
+        {"Movie", "app/db/default_movie.png"},
+        {"Article", "app/db/default_article.png"}};
+
+    for (const auto &key : defaultImages.keys())
     {
-        return "app/db/default_book.png";
-    }
-    else if (type.contains("Movie"))
-    {
-        return "app/db/default_movie.png";
-    }
-    else if (type.contains("Article"))
-    {
-        return "app/db/default_article.png";
+        if (type.contains(key))
+        {
+            return defaultImages[key];
+        }
     }
     return "app/db/default.png";
+}
+
+QPixmap ItemShowVisitor::loadImage(const QString &path, const QString &type)
+{
+    QPixmap pixmap;
+    if (!path.isEmpty() && QFileInfo::exists(path))
+    {
+        if (!pixmap.load(path))
+        {
+            qWarning() << "Failed to load image from path:" << path;
+        }
+    }
+
+    if (pixmap.isNull())
+    {
+        QString defaultPath = getDefaultImagePath(type);
+        if (QFileInfo::exists(defaultPath))
+        {
+            if (!pixmap.load(defaultPath))
+            {
+                qWarning() << "Failed to load default image from path:" << defaultPath;
+            }
+        }
+        if (pixmap.isNull())
+        {
+            pixmap.load("app/db/default.png");
+        }
+    }
+
+    return pixmap.scaledToWidth(IMAGE_MAX_WIDTH, Qt::SmoothTransformation);
 }
 
 QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QString &type)
@@ -52,147 +82,134 @@ QWidget *ItemShowVisitor::createImageWidget(const QString &imagePath, const QStr
     QVBoxLayout *imageLayout = new QVBoxLayout(imageWidget);
 
     QLabel *imageLabel = new QLabel;
-    QPixmap pixmap;
-
-    if (!imagePath.isEmpty() && QFileInfo::exists(imagePath))
-    {
-        pixmap.load(imagePath);
-    }
-    else
-    {
-        // Load default image based on type
-        QString defaultPath = getDefaultImagePath(type);
-        if (QFileInfo::exists(defaultPath))
-        {
-            pixmap.load(defaultPath);
-        }
-        else
-        {
-            // If type-specific default doesn't exist, try generic default
-            pixmap.load("app/db/default.png");
-        }
-    }
-
-    // Scale the image while maintaining aspect ratio
-    pixmap = pixmap.scaledToWidth(IMAGE_MAX_WIDTH, Qt::SmoothTransformation);
-    imageLabel->setPixmap(pixmap);
+    imageLabel->setPixmap(loadImage(imagePath, type));
     imageLabel->setAlignment(Qt::AlignCenter);
 
     imageLayout->addWidget(imageLabel);
-    imageLayout->addStretch(); // Push image to the top
+    imageLayout->addStretch();
 
     return imageWidget;
 }
 
-QWidget *ItemShowVisitor::createInfoWidget(const QString &type, const QString &title,
-                                           const QString &description, const QString &year,
-                                           const QString &review, const QString &comment,
-                                           const QString &extraInfo1, const QString &extraInfo2)
+QWidget *ItemShowVisitor::createInfoWidget(const ItemData &data)
 {
     QWidget *infoWidget = new QWidget;
     QVBoxLayout *infoLayout = new QVBoxLayout(infoWidget);
 
-    // Add all the information
-    infoLayout->addWidget(new QLabel(type));
-    infoLayout->addWidget(new QLabel("Title: " + title));
+    // Add type and title
+    infoLayout->addWidget(new QLabel(data.type));
+    infoLayout->addWidget(new QLabel("Title: " + data.title));
 
-    QLabel *descLabel = new QLabel("Description: " + description);
+    // Add description with word wrap
+    QLabel *descLabel = new QLabel("Description: " + data.description);
     descLabel->setWordWrap(true);
     infoLayout->addWidget(descLabel);
 
-    infoLayout->addWidget(new QLabel(extraInfo1));
-    if (!extraInfo2.isEmpty())
+    // Add extra info
+    for (const QString &info : data.extraInfo)
     {
-        infoLayout->addWidget(new QLabel(extraInfo2));
+        infoLayout->addWidget(new QLabel(info));
     }
 
-    infoLayout->addWidget(new QLabel("Year: " + year));
-    infoLayout->addWidget(new QLabel("Review: " + review));
+    // Add year and review
+    infoLayout->addWidget(new QLabel("Year: " + data.year));
+    infoLayout->addWidget(new QLabel("Review: " + data.review));
 
-    QLabel *commentLabel = new QLabel("Comment: " + comment);
+    // Add comment with word wrap
+    QLabel *commentLabel = new QLabel("Comment: " + data.comment);
     commentLabel->setWordWrap(true);
     infoLayout->addWidget(commentLabel);
 
-    // Add buttons at the bottom
+    // Add buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    QPushButton *editButton = new QPushButton("Edit " + type);
-    QPushButton *deleteButton = new QPushButton("Delete " + type);
+    QPushButton *editButton = new QPushButton("Edit " + data.type);
+    QPushButton *deleteButton = new QPushButton("Delete " + data.type);
 
     buttonLayout->addWidget(editButton);
     buttonLayout->addWidget(deleteButton);
 
-    infoLayout->addLayout(buttonLayout);
-    infoLayout->addStretch(); // Push all content to the top
-
-    // Connect buttons
     connect(deleteButton, &QPushButton::clicked, this, [this]()
             { emit deleteItemRequested(itemId); });
     connect(editButton, &QPushButton::clicked, this, [this]()
             { emit editItemRequested(itemId); });
 
+    infoLayout->addLayout(buttonLayout);
+    infoLayout->addStretch();
+
     return infoWidget;
+}
+
+QWidget *ItemShowVisitor::createItemWidget(const ItemData &data)
+{
+    QWidget *result = new QFrame;
+    QHBoxLayout *mainLayout = new QHBoxLayout(result);
+
+    mainLayout->addWidget(createImageWidget(data.imagePath, data.type));
+    mainLayout->addWidget(createInfoWidget(data));
+
+    return result;
+}
+
+ItemShowVisitor::ItemData ItemShowVisitor::extractItemData(const Book &book)
+{
+    ItemData data;
+    data.type = "📚 Book";
+    data.title = book.getTitle();
+    data.description = book.getDescription();
+    data.year = QString::number(book.getYear());
+    data.review = QString::number(book.getReview());
+    data.comment = book.getComment();
+    data.imagePath = book.getImagePath();
+    data.extraInfo << "Author: " + book.getAuthor();
+    return data;
+}
+
+ItemShowVisitor::ItemData ItemShowVisitor::extractItemData(const Movie &movie)
+{
+    ItemData data;
+    data.type = "🎬 Movie";
+    data.title = movie.getTitle();
+    data.description = movie.getDescription();
+    data.year = QString::number(movie.getYear());
+    data.review = QString::number(movie.getReview());
+    data.comment = movie.getComment();
+    data.imagePath = movie.getImagePath();
+    data.extraInfo << "Director: " + movie.getDirector();
+    return data;
+}
+
+ItemShowVisitor::ItemData ItemShowVisitor::extractItemData(const Article &article)
+{
+    ItemData data;
+    data.type = "📝 Article";
+    data.title = article.getTitle();
+    data.description = article.getDescription();
+    data.year = QString::number(article.getYear());
+    data.review = QString::number(article.getReview());
+    data.comment = article.getComment();
+    data.imagePath = article.getImagePath();
+    data.extraInfo << "Author: " + article.getAuthor();
+    data.extraInfo << "Link: " + article.getLink();
+    return data;
 }
 
 void ItemShowVisitor::visit(Book &book)
 {
     clearWidget();
-
-    QWidget *result = new QFrame;
-    QHBoxLayout *mainLayout = new QHBoxLayout(result);
-
-    // Create image widget
-    QWidget *imageWidget = createImageWidget(book.getImagePath(), "Book");
-    mainLayout->addWidget(imageWidget);
-
-    // Create info widget
-    QWidget *infoWidget = createInfoWidget("📚 Book", book.getTitle(), book.getDescription(),
-                                           QString::number(book.getYear()), QString::number(book.getReview()),
-                                           book.getComment(), "Author: " + book.getAuthor());
-    mainLayout->addWidget(infoWidget);
-
     itemId = book.getId();
-    widget = result;
+    widget = createItemWidget(extractItemData(book));
 }
 
 void ItemShowVisitor::visit(Movie &movie)
 {
     clearWidget();
-
-    QWidget *result = new QFrame;
-    QHBoxLayout *mainLayout = new QHBoxLayout(result);
-
-    // Create image widget
-    QWidget *imageWidget = createImageWidget(movie.getImagePath(), "Movie");
-    mainLayout->addWidget(imageWidget);
-
-    // Create info widget
-    QWidget *infoWidget = createInfoWidget("🎬 Movie", movie.getTitle(), movie.getDescription(),
-                                           QString::number(movie.getYear()), QString::number(movie.getReview()),
-                                           movie.getComment(), "Director: " + movie.getDirector());
-    mainLayout->addWidget(infoWidget);
-
     itemId = movie.getId();
-    widget = result;
+    widget = createItemWidget(extractItemData(movie));
 }
 
 void ItemShowVisitor::visit(Article &article)
 {
     clearWidget();
-
-    QWidget *result = new QFrame;
-    QHBoxLayout *mainLayout = new QHBoxLayout(result);
-
-    // Create image widget
-    QWidget *imageWidget = createImageWidget(article.getImagePath(), "Article");
-    mainLayout->addWidget(imageWidget);
-
-    // Create info widget
-    QWidget *infoWidget = createInfoWidget("📝 Article", article.getTitle(), article.getDescription(),
-                                           QString::number(article.getYear()), QString::number(article.getReview()),
-                                           article.getComment(), "Author: " + article.getAuthor(),
-                                           "Link: " + article.getLink());
-    mainLayout->addWidget(infoWidget);
-
     itemId = article.getId();
-    widget = result;
+    widget = createItemWidget(extractItemData(article));
 }
