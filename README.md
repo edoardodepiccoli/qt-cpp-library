@@ -2,6 +2,10 @@
 
 A comprehensive C++ library management application built with Qt, demonstrating advanced object-oriented programming concepts and design patterns.
 
+## 📃 Project Report
+
+See [this link](https://goats-rush-pn9.craft.me/lhd4IEGIJ3WE2a) for a comprehensive and detailed project report
+
 ## 🎯 Overview
 
 This application serves as a practical implementation of a library management system, showcasing:
