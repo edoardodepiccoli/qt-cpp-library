@@ -4,7 +4,7 @@ A comprehensive C++ library management application built with Qt, demonstrating 
 
 ## 📃 Project Report
 
-See [this link](https://goats-rush-pn9.craft.me/lhd4IEGIJ3WE2a) for a comprehensive and detailed project report
+See [this link](https://ginger-giant-757.notion.site/C-OOP-Project-Report-Qt-C-Library-Desktop-AppOOP-C-Qt-Project-1f389d32c3ef80c9a565d801b8375b00?pvs=4) for a comprehensive and detailed project report
 
 ## 🎯 Overview
 
