@@ -1,3 +1,6 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QUuid>
@@ -33,6 +36,10 @@ private slots:
     void setEditItemView(Item *item);
     void setShowItemView(Item *item);
 
+    // Import/Export slots
+    void handleImportItemsRequest();
+    void handleExportItemsRequest();
+
 private:
     QStackedWidget *stackedWidget;
 
@@ -41,3 +48,5 @@ private:
     QString currentSearchQuery;
     QString pendingImagePath; // Store the image path temporarily
 };
+
+#endif // MAINWINDOW_H

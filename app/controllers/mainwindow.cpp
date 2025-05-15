@@ -9,6 +9,8 @@
 #include <QAction>
 #include <QVBoxLayout>
 #include <QUuid>
+#include <QFileDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -32,9 +34,14 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar *toolbar = addToolBar("Navigation");
     QAction *indexAction = toolbar->addAction("Index");
     QAction *newItemAction = toolbar->addAction("New Item");
+    toolbar->addSeparator();
+    QAction *importAction = toolbar->addAction("Import Items");
+    QAction *exportAction = toolbar->addAction("Export Items");
 
     connect(indexAction, &QAction::triggered, this, &MainWindow::setIndexView);
     connect(newItemAction, &QAction::triggered, this, &MainWindow::setNewItemView);
+    connect(importAction, &QAction::triggered, this, &MainWindow::handleImportItemsRequest);
+    connect(exportAction, &QAction::triggered, this, &MainWindow::handleExportItemsRequest);
 
     // Set central widget
     setCentralWidget(central);
@@ -199,4 +206,33 @@ void MainWindow::handleDeleteItemRequest(const QUuid &itemId)
     libraryModel->removeItem(itemId);
     // Update the index view
     setIndexView();
+}
+
+void MainWindow::handleImportItemsRequest()
+{
+    QString filePath = QFileDialog::getOpenFileName(this,
+                                                    "Import Items", "", "JSON Files (*.json)");
+
+    if (!filePath.isEmpty())
+    {
+        libraryModel->importItems(filePath);
+        // Refresh the current view to show imported items
+        if (auto *indexView = qobject_cast<IndexView *>(stackedWidget->currentWidget()))
+        {
+            indexView->populateFromLibrary(libraryModel.get(), currentSearchQuery);
+        }
+        QMessageBox::information(this, "Import Complete", "Items have been imported successfully 😎");
+    }
+}
+
+void MainWindow::handleExportItemsRequest()
+{
+    QString dirPath = QFileDialog::getExistingDirectory(this,
+                                                        "Export Items", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (!dirPath.isEmpty())
+    {
+        libraryModel->exportItems(dirPath);
+        QMessageBox::information(this, "Export Complete", "Items have been exported successfully 😎");
+    }
 }
