@@ -36,13 +36,39 @@ void Library::removeItem(const QUuid &id)
     {
         // Remove the image file if it exists and is in our local images directory
         QString imagePath = (*it)->getImagePath();
+        qDebug() << "Checking image path for deletion:" << imagePath;
+        qDebug() << "Images path from Library:" << imagesPath;
+
         if (!imagePath.isEmpty() && QFile::exists(imagePath))
         {
             QFileInfo fileInfo(imagePath);
-            if (fileInfo.absolutePath() == QFileInfo(imagesPath).absolutePath())
+            QFileInfo imagesDirInfo(imagesPath);
+
+            qDebug() << "Image absolute path:" << fileInfo.absolutePath();
+            qDebug() << "Image directory:" << fileInfo.dir().absolutePath();
+            qDebug() << "Images directory path:" << imagesDirInfo.absolutePath();
+
+            // Check if the image is in our images directory
+            QString imageDir = fileInfo.dir().absolutePath();
+            QString targetDir = QFileInfo(imagesPath).absolutePath() + "/images";
+
+            qDebug() << "Comparing directories:";
+            qDebug() << "  Image dir:" << imageDir;
+            qDebug() << "  Target dir:" << targetDir;
+
+            if (imageDir == targetDir)
             {
-                QFile::remove(imagePath);
+                bool removed = QFile::remove(imagePath);
+                qDebug() << "Attempted to delete image:" << imagePath << "Success:" << removed;
             }
+            else
+            {
+                qDebug() << "Image not in images directory, skipping deletion";
+            }
+        }
+        else
+        {
+            qDebug() << "No image path or file doesn't exist";
         }
 
         items.erase(it);
@@ -56,13 +82,39 @@ void Library::removeItem(int index)
     {
         // Remove the image file if it exists and is in our local images directory
         QString imagePath = items[index]->getImagePath();
+        qDebug() << "Checking image path for deletion:" << imagePath;
+        qDebug() << "Images path from Library:" << imagesPath;
+
         if (!imagePath.isEmpty() && QFile::exists(imagePath))
         {
             QFileInfo fileInfo(imagePath);
-            if (fileInfo.absolutePath() == QFileInfo(imagesPath).absolutePath())
+            QFileInfo imagesDirInfo(imagesPath);
+
+            qDebug() << "Image absolute path:" << fileInfo.absolutePath();
+            qDebug() << "Image directory:" << fileInfo.dir().absolutePath();
+            qDebug() << "Images directory path:" << imagesDirInfo.absolutePath();
+
+            // Check if the image is in our images directory
+            QString imageDir = fileInfo.dir().absolutePath();
+            QString targetDir = QFileInfo(imagesPath).absolutePath() + "/images";
+
+            qDebug() << "Comparing directories:";
+            qDebug() << "  Image dir:" << imageDir;
+            qDebug() << "  Target dir:" << targetDir;
+
+            if (imageDir == targetDir)
             {
-                QFile::remove(imagePath);
+                bool removed = QFile::remove(imagePath);
+                qDebug() << "Attempted to delete image:" << imagePath << "Success:" << removed;
             }
+            else
+            {
+                qDebug() << "Image not in images directory, skipping deletion";
+            }
+        }
+        else
+        {
+            qDebug() << "No image path or file doesn't exist";
         }
 
         items.erase(items.begin() + index);
