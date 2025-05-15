@@ -35,6 +35,7 @@ void Library::removeItem(const QUuid &id)
     if (it != items.end())
     {
         // Remove the image file if it exists and is in our local images directory
+        // I will keep these debug statements for now, but we can remove them later
         QString imagePath = (*it)->getImagePath();
         qDebug() << "Checking image path for deletion:" << imagePath;
         qDebug() << "Images path from Library:" << imagesPath;
@@ -76,6 +77,7 @@ void Library::removeItem(const QUuid &id)
     }
 }
 
+// I will keep this method for now, it is useful for debugging and easier removal of items with the CLI
 void Library::removeItem(int index)
 {
     if (index >= 0 && index < static_cast<int>(items.size()))
