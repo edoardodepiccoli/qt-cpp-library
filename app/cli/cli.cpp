@@ -47,6 +47,14 @@ void CLI::processCommand(const QString &command)
     {
         searchItems();
     }
+    else if (command == "import")
+    {
+        importItems();
+    }
+    else if (command == "export")
+    {
+        exportItems();
+    }
     else
     {
         showError("Unknown command. Type 'help' for available commands.");
@@ -152,7 +160,9 @@ void CLI::showHelp()
     out << "  list   - List all items\n";
     out << "  help   - Show this help message\n";
     out << "  exit   - Exit the program\n";
-    out << "  search - Search for an item\n\n";
+    out << "  search - Search for an item\n";
+    out << "  import - Import items from a JSON file\n";
+    out << "  export - Export items to a directory\n\n";
 }
 
 void CLI::showError(const QString &message)
@@ -235,4 +245,54 @@ std::unique_ptr<Item> CLI::createItem(const QString &type)
     }
 
     return item;
+}
+
+void CLI::importItems()
+{
+    out << "Enter path to JSON file to import: ";
+    QString filePath = readInput("File path: ").trimmed();
+
+    if (filePath.isEmpty())
+    {
+        showError("No file path provided");
+        return;
+    }
+
+    QFileInfo fileInfo(filePath);
+    if (!fileInfo.exists())
+    {
+        showError("File does not exist");
+        return;
+    }
+
+    if (!fileInfo.isFile())
+    {
+        showError("Path is not a file");
+        return;
+    }
+
+    library.importItems(filePath);
+    out << "Import completed. Use 'list' to see imported items.\n";
+}
+
+void CLI::exportItems()
+{
+    out << "Enter directory path to export to: ";
+    QString dirPath = readInput("Directory path: ").trimmed();
+
+    if (dirPath.isEmpty())
+    {
+        showError("No directory path provided");
+        return;
+    }
+
+    QFileInfo dirInfo(dirPath);
+    if (dirInfo.exists() && !dirInfo.isDir())
+    {
+        showError("Path exists but is not a directory");
+        return;
+    }
+
+    library.exportItems(dirPath);
+    out << "Export completed. Items exported to: " << dirPath << "\n";
 }

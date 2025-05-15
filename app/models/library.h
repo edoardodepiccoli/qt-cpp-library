@@ -37,11 +37,27 @@ public:
     QString getDefaultImagePath(const Item *item) const;
     void removeItemImage(const QUuid &id);
 
+    // Getters and setters for the paths
+    QString getDbPath() const { return dbPath; }
+    QString getImagesPath() const { return imagesPath; }
+    void setDbPath(const QString &path) { dbPath = path; }
+    void setImagesPath(const QString &path) { imagesPath = path; }
+
+    // Import and export methods
+    // The import method works by merging the items from the file with the items in the library, then writing the result to the database. For each imported items, also copy the image in its imagePath to the images directory, then update the imagePath of the item to the new path.
+    void importItems(const QString &filePath);
+    // The export method works by writing the items in the library to a file. For each item, also copy the image in its imagePath to the images directory, then update the imagePath of the item to the new path.
+    void exportItems(const QString &dirPath);
+
 private:
     std::vector<std::unique_ptr<Item>> items;
     QString copyImageToDb(const QString &sourcePath, const QUuid &itemId);
     void ensureImagesDirectoryExists();
     QTextStream out{stdout};
+
+    // Paths to the database and images directory
+    QString dbPath = "app/db/data.json";
+    QString imagesPath = "app/db/images";
 };
 
 #endif // LIBRARY_H

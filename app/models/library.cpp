@@ -34,11 +34,15 @@ void Library::removeItem(const QUuid &id)
 
     if (it != items.end())
     {
-        // Remove the image file if it exists
+        // Remove the image file if it exists and is in our local images directory
         QString imagePath = (*it)->getImagePath();
         if (!imagePath.isEmpty() && QFile::exists(imagePath))
         {
-            QFile::remove(imagePath);
+            QFileInfo fileInfo(imagePath);
+            if (fileInfo.absolutePath() == QFileInfo(imagesPath).absolutePath())
+            {
+                QFile::remove(imagePath);
+            }
         }
 
         items.erase(it);
@@ -50,11 +54,15 @@ void Library::removeItem(int index)
 {
     if (index >= 0 && index < static_cast<int>(items.size()))
     {
-        // Remove the image file if it exists
+        // Remove the image file if it exists and is in our local images directory
         QString imagePath = items[index]->getImagePath();
         if (!imagePath.isEmpty() && QFile::exists(imagePath))
         {
-            QFile::remove(imagePath);
+            QFileInfo fileInfo(imagePath);
+            if (fileInfo.absolutePath() == QFileInfo(imagesPath).absolutePath())
+            {
+                QFile::remove(imagePath);
+            }
         }
 
         items.erase(items.begin() + index);
@@ -89,7 +97,7 @@ int Library::getItemCount() const
 
 void Library::ensureImagesDirectoryExists()
 {
-    QDir dir("app/db/images");
+    QDir dir(imagesPath);
     if (!dir.exists())
     {
         dir.mkpath(".");
@@ -105,7 +113,7 @@ QString Library::copyImageToDb(const QString &sourcePath, const QUuid &itemId)
         extension = "png"; // Default to PNG if no extension
     }
 
-    QString targetPath = QString("app/db/images/%1.%2").arg(itemId.toString()).arg(extension);
+    QString targetPath = QString("%1/%2.%3").arg(imagesPath).arg(itemId.toString()).arg(extension);
 
     // If the source is already in our db directory, no need to copy
     if (sourcePath == targetPath)
@@ -200,7 +208,7 @@ bool Library::saveToFile()
     }
 
     QJsonDocument doc(jsonArray);
-    QFile file("app/db/data.json");
+    QFile file(dbPath);
 
     if (!file.open(QIODevice::WriteOnly))
     {
@@ -213,7 +221,7 @@ bool Library::saveToFile()
 
 bool Library::loadFromFile()
 {
-    QFile file("app/db/data.json");
+    QFile file(dbPath);
     if (!file.open(QIODevice::ReadOnly))
     {
         // If file doesn't exist, create an empty one
@@ -397,4 +405,162 @@ std::vector<Item *> Library::searchItems(const QString &query) const
     }
 
     return results;
+}
+
+void Library::importItems(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Failed to open import file:" << filePath;
+        return;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    if (doc.isNull())
+    {
+        qDebug() << "Invalid JSON in import file";
+        return;
+    }
+
+    // Get the directory of the import file to resolve relative paths
+    QFileInfo fileInfo(filePath);
+    QString importDir = fileInfo.absolutePath();
+
+    QJsonArray jsonArray = doc.array();
+    int importedCount = 0;
+
+    for (const QJsonValue &value : jsonArray)
+    {
+        QJsonObject obj = value.toObject();
+        QString type = obj["type"].toString();
+
+        std::unique_ptr<Item> item;
+        if (type == "book")
+        {
+            item = std::make_unique<Book>();
+            static_cast<Book *>(item.get())->setAuthor(obj["author"].toString());
+        }
+        else if (type == "movie")
+        {
+            item = std::make_unique<Movie>();
+            static_cast<Movie *>(item.get())->setDirector(obj["director"].toString());
+        }
+        else if (type == "article")
+        {
+            item = std::make_unique<Article>();
+            static_cast<Article *>(item.get())->setLink(obj["link"].toString());
+            static_cast<Article *>(item.get())->setAuthor(obj["author"].toString());
+        }
+        else
+        {
+            continue; // Skip invalid item types
+        }
+
+        // Set basic properties
+        item->setTitle(obj["title"].toString());
+        item->setDescription(obj["description"].toString());
+        item->setYear(obj["year"].toInt());
+        item->setReview(obj["review"].toInt());
+        item->setComment(obj["comment"].toString());
+
+        // Handle image
+        if (obj.contains("imagePath") && !obj["imagePath"].isNull())
+        {
+            QString imagePath = obj["imagePath"].toString();
+            // Resolve the relative path against the import file's directory
+            QString absoluteImagePath = QDir(importDir).absoluteFilePath(imagePath);
+
+            if (QFile::exists(absoluteImagePath))
+            {
+                QString newImagePath = copyImageToDb(absoluteImagePath, item->getId());
+                if (!newImagePath.isEmpty())
+                {
+                    item->setImagePath(newImagePath);
+                }
+                else
+                {
+                    item->setImagePath(getDefaultImagePath(item.get()));
+                }
+            }
+            else
+            {
+                item->setImagePath(getDefaultImagePath(item.get()));
+            }
+        }
+        else
+        {
+            item->setImagePath(getDefaultImagePath(item.get()));
+        }
+
+        items.push_back(std::move(item));
+        importedCount++;
+    }
+
+    saveToFile();
+    qDebug() << "Imported" << importedCount << "items from" << filePath;
+}
+
+void Library::exportItems(const QString &dirPath)
+{
+    // Create export directory if it doesn't exist
+    QDir dir(dirPath);
+    if (!dir.exists() && !dir.mkpath("."))
+    {
+        qDebug() << "Failed to create export directory:" << dirPath;
+        return;
+    }
+
+    // Create images subdirectory
+    QDir imagesDir(dirPath + "/images");
+    if (!imagesDir.exists() && !imagesDir.mkpath("."))
+    {
+        qDebug() << "Failed to create images directory";
+        return;
+    }
+
+    QJsonArray jsonArray;
+    JSONVisitor jsonVisitor;
+
+    for (const auto &item : items)
+    {
+        item->accept(jsonVisitor);
+        QJsonObject obj = jsonVisitor.getResult();
+
+        // Handle image path
+        QString currentImagePath = item->getImagePath();
+        if (!currentImagePath.isEmpty() && QFile::exists(currentImagePath))
+        {
+            // Copy image to export directory
+            QString fileName = QFileInfo(currentImagePath).fileName();
+            QString newImagePath = imagesDir.filePath(fileName);
+            if (QFile::copy(currentImagePath, newImagePath))
+            {
+                // Update image path to be relative to images directory
+                obj["imagePath"] = "images/" + fileName;
+            }
+            else
+            {
+                obj["imagePath"] = QString();
+            }
+        }
+        else
+        {
+            obj["imagePath"] = QString();
+        }
+
+        jsonArray.append(obj);
+    }
+
+    // Save JSON file
+    QJsonDocument doc(jsonArray);
+    QFile file(dir.filePath("data.json"));
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        qDebug() << "Failed to create export file";
+        return;
+    }
+
+    file.write(doc.toJson());
+    qDebug() << "Exported" << items.size() << "items to" << dirPath;
 }
